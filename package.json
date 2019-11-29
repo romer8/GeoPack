@@ -1,0 +1,37 @@
+{
+  "name": "geoglows",
+  "version": "1.0.0",
+  "description": "This is an npm package that helps to use the Geoglows API",
+  "main": "index.js",
+  "dependencies": {
+    "jquery": "^3.4.1",
+    "mathjs": "^6.2.5",
+    "plotly.js-dist": "^1.51.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.7.4",
+    "@babel/preset-env": "^7.7.4",
+    "babel-loader": "^8.0.6",
+    "mocha": "^6.2.2",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --reporter spec",
+    "build": "webpack --progress --mode=production",
+    "watch": "webpack --progress --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/romer8/GeoPack.git"
+  },
+  "keywords": [
+    "BYU"
+  ],
+  "author": "Hydroinformatics Lab BYU",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/romer8/GeoPack/issues"
+  },
+  "homepage": "https://github.com/romer8/GeoPack#readme"
+}
