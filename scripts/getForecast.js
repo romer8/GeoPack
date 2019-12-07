@@ -160,6 +160,52 @@ module.exports= {
          dates.highres = [], dates.dates = [];
          values.highres = [], values.max = [], values.mean = [], values.min = [], values.std_dev_range_lower = [], values.std_dev_range_upper = [];
       },
-  });
+    });
+  },
+  downloadData:function(reachid){
+    console.log("enter the download function");
+    // THIS IS A FUNCTION TO DOWNLOAD DATA //
+    var downloadUrl=endpoint +"ForecastEnsembles/?reach_id="+reachid+"&return_format=csv"
+    // var downloadUrl="https://tethys2.byu.edu/localsptapi/api/"+"ForecastEnsembles/?reach_id="+reachid+"&return_format=csv";
+    var req = new XMLHttpRequest();
+    req.open("GET", downloadUrl, true);
+    req.responseType = "blob";
+    // if the API requires the headers///
+    // req.setRequestHeader('my-custom-header', 'custom-value'); // adding some headers (if needed)
+
+    req.onload = function (event) {
+      console.log("onload");
+      var blob = req.response;
+      var fileName = reachid;
+      var contentType = req.getResponseHeader("content-type");
+
+      //IE/EDGE seems not returning some response header
+      if (req.getResponseHeader("content-disposition")) {
+        console.log("enter first if");
+        var contentDisposition = req.getResponseHeader("content-disposition");
+        fileName = contentDisposition.substring(contentDisposition.indexOf("=")+1);
+      }
+      else {
+        console.log("enter first else");
+        fileName = reachid + " Forecast." + contentType.substring(contentType.indexOf("/")+1);
+      }
+
+      if (window.navigator.msSaveOrOpenBlob) {
+        // Internet Explorer
+        console.log("enter second if ");
+        window.navigator.msSaveOrOpenBlob(new Blob([blob], {type: contentType}), fileName);
+      }
+      else {
+        console.log("enter second else");
+        var el = document.createElement("a");
+        el.id="target";
+        // var el = document.getElementById("target");
+        el.href = window.URL.createObjectURL(blob);
+        el.download = fileName;
+        el.click();
+        window.URL.revokeObjectURL(el.href);
+      }
+    };
+    req.send();
   }
 }
