@@ -17,8 +17,18 @@ var seasonal=require('./scripts/getSeasonal.js');
   Final wrapper for the function containing the other
   modules
 */
-module.exports= {
-  forecast: forecast,
-  historical: historical,
-  seasonal: seasonal
-}
+// if(typeof exports != "undefined"){
+  module.exports= {
+    FORECAST: forecast,
+    HISTORICAL: historical,
+    SEASONAL: seasonal
+  }
+//   exports.FORECAST = forecast;
+//   exports.HISTORICAL = historical;
+//   exports.SEASONAL = seasonal;
+// }
+// else{
+//   const FORECAST = forecast;
+//   const HISTORICAL = historical;
+//   const SEASONAL = seasonal;
+// }
