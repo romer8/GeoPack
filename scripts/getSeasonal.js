@@ -149,47 +149,47 @@ module.exports={
               values.mean.push(data[1]);
             }
           },
-            complete: function() {
-                console.log("complete part of the ajax call for getSeasonalAverage");
-                var mean = {
-                    name: 'Mean',
-                    x: dates.dates,
-                    y: values.mean,
-                    mode: "lines",
-                    line: {color: 'blue'}
-                };
-                var data = [mean];
+          complete: function() {
+              console.log("complete part of the ajax call for getSeasonalAverage");
+              var mean = {
+                  name: 'Mean',
+                  x: dates.dates,
+                  y: values.mean,
+                  mode: "lines",
+                  line: {color: 'blue'}
+              };
+              var data = [mean];
 
-                var layout = {
-                    // title: 'Historical Streamflow<br>'+titleCase(watershed) + ' Reach ID:' + comid,
-                    title: 'Seasonal Average StreamFlow<br>'+' Reach ID:' + reachid,
-                    xaxis: {title: 'Date', showgrid: false},
-                    yaxis: {title: 'Streamflow m3/s', range: [0, Math.max(...data[0].y) + Math.max(...data[0].y)/5], showgrid: false},
-                    // plot_bgcolor:"#7782c5",
+              var layout = {
+                  // title: 'Historical Streamflow<br>'+titleCase(watershed) + ' Reach ID:' + comid,
+                  title: 'Seasonal Average StreamFlow<br>'+' Reach ID:' + reachid,
+                  xaxis: {title: 'Date', showgrid: false},
+                  yaxis: {title: 'Streamflow m3/s', range: [0, Math.max(...data[0].y) + Math.max(...data[0].y)/5], showgrid: false},
+                  // plot_bgcolor:"#7782c5",
 
-                    //shapes: returnShapes,
-                }
-                //Removing any exisisting element with the same name//
-                Plotly.purge(htmlELement);
-                Plotly.newPlot(htmlELement, data, layout);
+                  //shapes: returnShapes,
+              }
+              //Removing any exisisting element with the same name//
+              Plotly.purge(htmlELement);
+              Plotly.newPlot(htmlELement, data, layout);
 
-                var index = data[0].x.length-1;
+              var index = data[0].x.length-1;
 
-                // for(var i=0; i<data[0].y.length;++i){
-                //   console.log(i);
-                //   console.log(data[0].y[i]);
-                //
-                // };
-                returnPeriods.graph_rp(reachid, data[0].x[0], data[0].x[index],width,height);
+              // for(var i=0; i<data[0].y.length;++i){
+              //   console.log(i);
+              //   console.log(data[0].y[i]);
+              //
+              // };
+              returnPeriods.graph_rp(reachid, data[0].x[0], data[0].x[index],width,height);
 
-                // getreturnperiods(reachid, data[0].x[0], data[0].x[index],width,height);
+              // getreturnperiods(reachid, data[0].x[0], data[0].x[index],width,height);
 
-                dates.highres = [], dates.dates = [];
-                values.highres = [], values.max = [], values.mean = [], values.min = [], values.std_dev_range_lower = [], values.std_dev_range_upper = [];
-            }//add lines to plotly
+              dates.highres = [], dates.dates = [];
+              values.highres = [], values.max = [], values.mean = [], values.min = [], values.std_dev_range_lower = [], values.std_dev_range_upper = [];
+          }//add lines to plotly
 
-          });
-        }
+        });
+      }
     });
   }
 
