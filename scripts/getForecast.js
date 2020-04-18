@@ -298,6 +298,8 @@ module.exports= {
              Plotly.newPlot(htmlELement, data, layout);
 
              var index = data[0].x.length-1;
+             returnPeriods.graph_rp(reachid, data[0].x[0], data[0].x[index],width,height,htmlELement);
+
              dates.highres = [], dates.dates = [];
              values.highres = [], values.max = [], values.mean = [], values.min = [], values.std_dev_range_lower = [], values.std_dev_range_upper = [];
           },
