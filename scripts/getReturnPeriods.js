@@ -14,7 +14,7 @@ var endpoint="https://tethys2.byu.edu/localsptapi/api/"
 
 
 module.exports= {
- graph_rp: function (reachid,start, end, width, height) {
+ graph_rp: function (reachid,start, end, width, height,htmlELement) {
  // var layer_URL="https://tethys2.byu.edu/localsptapi/api/ReturnPeriods/?reach_id="+reachid+"&return_format=csv";
  var layer_URL=endpoint+"ReturnPeriods/?reach_id="+reachid+"&return_format=csv";
  console.log("inside getreturnperiods");
@@ -109,7 +109,7 @@ module.exports= {
          var update = {
              shapes: shapes,
          };
-         Plotly.relayout('graph', update);
+         Plotly.relayout(htmlELement, update);
        }
    })
  }

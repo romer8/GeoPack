@@ -1,25 +1,33 @@
 {
   "name": "geoglows",
-  "version": "1.0.4",
+  "version": "1.0.10",
   "description": "This is an npm package that helps to use the Geoglows API",
-  "main": "index.js",
+  "main": "dist/geoglows.js",
   "dependencies": {
     "jquery": "^3.4.1",
     "mathjs": "^6.2.5",
     "plotly.js-dist": "^1.51.2"
   },
   "devDependencies": {
+    "@babel/cli": "^7.8.4",
     "@babel/core": "^7.7.4",
     "@babel/preset-env": "^7.7.4",
     "babel-loader": "^8.0.6",
+    "cross-env": "^7.0.2",
     "mocha": "^6.2.2",
+    "rimraf": "^3.0.2",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10"
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha --reporter spec",
     "build": "webpack --progress --mode=production",
-    "watch": "webpack --progress --watch"
+    "watch": "webpack --progress --watch",
+    "build:commonjs": "babel scripts --out-dir lib",
+    "build:umd": "cross-env FILE_NAME=geoglows webpack",
+    "build:umd:min": "cross-env NODE_ENV=production npm run build:umd",
+    "clean": "rimraf lib dist",
+    "build:f": "npm run clean && npm run build:commonjs && npm run build:umd && npm run build:umd:min"
   },
   "repository": {
     "type": "git",
@@ -33,5 +41,8 @@
   "bugs": {
     "url": "https://github.com/romer8/GeoPack/issues"
   },
+  "files":[
+    "dist"
+  ],
   "homepage": "https://github.com/romer8/GeoPack#readme"
 }
