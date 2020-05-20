@@ -1,129 +1,134 @@
 /**
-Author: Elkin Giovanni Romero Bustamante
-This Module helps with the return periods for the forecast, historical graphs,
+
+This Module only exports a graph containing historical data,
+it can be added with more functions if neeeded, porobably something great
+will be to have the coordinates of lat long available to makeable to plot a graph.
 **/
 
 //*** REQUIRE LIBRARIES***///
 var Plotly = require('plotly.js-dist');
 var $ = require("jquery");
+var returnPeriods=require('./returnPeriods.js');
+
 
 //**GLOBAL VARIABLES TO DEAL WITH THE FUNCTIONS**//
+
+var dates = [];
+var values = [];
+var units;
 var returnShapes;
 var endpoint="http://0.0.0.0:8090/api/";
 
-
+//** THIS FUNCTIONS RETRIEVES THE HISTORICAL DATA IN A GRAPH **//
 module.exports= {
- graph_rp: function (reachid,htmlELement,width, height) {
- // var layer_URL="https://tethys2.byu.edu/localsptapi/api/ReturnPeriods/?reach_id="+reachid+"&return_format=csv";
- var layer_URL=endpoint+"ReturnPeriods/?reach_id="+reachid+"&return_format=json";
- console.log("inside getreturnperiods");
-   $.ajax({
-     type:'GET',
-     assync: true,
-     url: layer_URL,
-     dataType: 'json',
-     contentType:'application/json',
-     success: function (data) {
-       console.log(data);
-       var returnPeriodsObject = data['return_periods'];
-       var startDate = data['startdate'].split('T')[0];
-       var endDate = data['enddate'].split('T')[0];
-       var band_alt_max = -9999
-       var rp2 = returnPeriodsObject['return_period_2'];
-       var rp5 = returnPeriodsObject['return_period_5'];
-       var rp10 = returnPeriodsObject['return_period_10'];
-       var rp25 = returnPeriodsObject['return_period_25'];
-       var rp50 = returnPeriodsObject['return_period_50'];
-       var rp100 = returnPeriodsObject['return_period_100'];
-       console.log(rp100);
-       console.log(startDate);
-       console.log(endDate);
-       var shapes = [
-               // return 2 band
-               {
-                   type: 'rect',
-                   layer: 'below',
-                   xref: 'x',
-                   yref: 'y',
-                   x0: startDate,
-                   y0: rp2,
-                   x1: endDate,
-                   y1: rp5,
-                   line: {width:1},
-                   fillcolor: 'rgba(128, 255, 0, 0.4)',
-               },
-               // RETURN PERIOD 5 BAND
-               {
-                   type: 'rect',
-                   layer: 'below',
-                   xref: 'x',
-                   yref: 'y',
-                   x0: startDate,
-                   y0: rp5,
-                   x1: endDate,
-                   y1: rp10,
-                   line: {width:1},
-                   fillcolor: 'rgba(255, 255, 0, 0.4)'
-               },
-               // return 10 band
-               {
-                   type: 'rect',
-                   layer: 'below',
-                   xref: 'x',
-                   yref: 'y',
-                   x0: startDate,
-                   y0: rp10,
-                   x1: endDate,
-                   y1: rp25,
-                   line: {width: 1},
-                   fillcolor: 'rgba(255, 128, 0, 0.4)'
-               },
-               // return 25 band
-               {
-                   type: 'rect',
-                   layer: 'below',
-                   xref: 'x',
-                   yref: 'y',
-                   x0: startDate,
-                   y0: rp25,
-                   x1: endDate,
-                   y1: rp50,
-                   line: {width: 1},
-                   fillcolor: 'rgba(255, 0, 0, 0.4)'
-               },
-               // return 50 band
-               {
-                   type: 'rect',
-                   layer: 'below',
-                   xref: 'x',
-                   yref: 'y',
-                   x0: startDate,
-                   y0: rp50,
-                   x1: endDate,
-                   y1: rp100,
-                   line: {width: 1},
-                   fillcolor: 'rgba(255, 0, 255, 0.4)'
-               },
+  graph: function(reachid,htmlElement,title,width,height) {
+    width = (typeof width !== 'undefined') ?  width : 600;
+    height = (typeof heigth !== 'undefined') ?  heigth : 500;
+    title = (typeof title !== 'undefined') ?  title : 'Reach ID: ' + reachid;
+    var dataObject={};
+    var layer_URL=endpoint +"HistoricSimulation/?reach_id="+reachid+"&return_format=json";
 
-               //return 100 band
-               {
-                 type: 'rect',
-                 layer: 'below',
-                 xref: 'x',
-                 yref: 'y',
-                 x0: startDate,
-                 y0: rp100,
-                 x1: endDate,
-                 y1: Math.max(rp100, band_alt_max),
-                 line: {width: 1},
-                 fillcolor: 'rgba(127, 0, 255, 0.4)'
-               },
-             ];
-         var update = {
-             shapes: shapes,
-         };
-         Plotly.relayout(htmlELement, update);
-       }
-   })
- }
+    $.ajax({
+      type:'GET',
+      url: layer_URL,
+      dataType: 'json',
+      contentType:'application/json',
+      success: function(data) {
+        console.log('we have succeed gethistorical');
+        console.log(data);
+        var response_timeSeries = data['time_series'];
+        var dates_prep = response_timeSeries['datetime'];
+        var dates_prep = response_timeSeries['datetime'];
+        dates_prep.forEach(function(x){
+          var onlyDate = x.split('T')[0];
+          dates.push(onlyDate);
+        });
+        console.log(dates);
+        values =response_timeSeries['flow'];
+        units =data['units']['short'];
+
+      },
+
+      complete: function() {
+        var values_object = {
+            name: 'Historical Records',
+            x: dates,
+            y: values,
+            mode: "lines",
+            line: {color: 'blue'}
+        };
+        var rp2 = {
+            name: '2-yr Return Period',
+            x: [Math.min.apply(Math, values_object.x),
+                Math.max.apply(Math, values_object.x)],
+            y: [0],
+            mode: "lines",
+            line: {color: 'rgba(128, 255, 0, 0.4)'}
+        };
+        var rp5 = {
+            name: '5-yr Return Period',
+            x: [Math.min.apply(Math, values_object.x),
+                Math.max.apply(Math, values_object.x)],
+            y: [0],
+            mode: "lines",
+            line: {color: 'rgba(255, 255, 0, 0.4)'}
+        };
+        var rp10 = {
+            name: '10-yr Return Period',
+            x: [Math.min.apply(Math, values_object.x),
+                Math.max.apply(Math, values_object.x)],
+            y: [0],
+            mode: "lines",
+            line: {color: 'rgba(255, 128, 0, 0.4)'}
+        };
+        var rp25 = {
+            name: '25-yr Return Period',
+            x: [Math.min.apply(Math, values_object.x),
+                Math.max.apply(Math, values_object.x)],
+            y: [0],
+            mode: "lines",
+            line: {color: 'rgba(255, 0, 0, 0.4)'}
+        };
+        var rp50 = {
+            name: '50-yr Return Period',
+            x: [Math.min.apply(Math, values_object.x),
+                Math.max.apply(Math, values_object.x)],
+            y: [0],
+            mode: "lines",
+            line: {color: 'rgba(255, 0, 255, 0.4)'}
+        };
+        var rp100 = {
+            name: '100-yr Return Period',
+            x: [Math.min.apply(Math, values_object.x),
+                Math.max.apply(Math, values_object.x)],
+            y: [0],
+            mode: "lines",
+            line: {color: 'rgba(127, 0, 255, 0.4)'}
+        };
+
+
+        var data_array= [values_object,rp2,rp5,rp10,rp25,rp50,rp100]
+        var layout = {
+            autosize: true,
+            showlegend:true,
+            // title: 'Historical Streamflow<br>'+titleCase(watershed) + ' Reach ID:' + comid,
+            title: 'Historical Streamflow<br>'+title,
+            width: width,
+            height: height,
+            xaxis: {title: 'Date',showgrid: false},
+            yaxis: {title: units, range: [0, Math.max(...data_array[0].y) + Math.max(...data_array[0].y)/5],showgrid: false},
+            // plot_bgcolor:"#7782c5",
+            //shapes: returnShapes,
+        }
+        //Removing any exisisting element with the same name//
+
+        Plotly.purge(htmlElement);
+        Plotly.newPlot(htmlElement, data_array, layout);
+
+          returnPeriods.graph(reachid,htmlElement,width,height);
+          dates=[]
+          values = []
+      }
+    });
+  },
 }

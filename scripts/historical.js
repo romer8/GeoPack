@@ -20,7 +20,7 @@ var endpoint="http://0.0.0.0:8090/api/";
 
 //** THIS FUNCTIONS RETRIEVES THE HISTORICAL DATA IN A GRAPH **//
 module.exports= {
-  graph_h: function(reachid,htmlELement,title,width,height) {
+  graph: function(reachid,htmlELement,title,width,height) {
     width = (typeof width !== 'undefined') ?  width : 500;
     height = (typeof heigth !== 'undefined') ?  heigth : 500;
     title = (typeof title !== 'undefined') ?  title : 'Reach ID: ' + reachid;
@@ -73,7 +73,8 @@ module.exports= {
             x: dates,
             y: values,
             mode: "lines",
-            line: {color: 'blue'}
+            line: {color: 'blue'},
+            showlegend:true
         };
         var data_array= [values_object]
         var layout = {
@@ -85,6 +86,7 @@ module.exports= {
             height: height,
             xaxis: {title: 'Date',showgrid: false},
             yaxis: {title: units, range: [0, Math.max(...data_array[0].y) + Math.max(...data_array[0].y)/5],showgrid: false},
+
             // plot_bgcolor:"#7782c5",
             //shapes: returnShapes,
         }
