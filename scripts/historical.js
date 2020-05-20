@@ -10,6 +10,7 @@ will be to have the coordinates of lat long available to makeable to plot a grap
 var Plotly = require('plotly.js-dist');
 var $ = require("jquery");
 var returnPeriods=require('./returnPeriods.js');
+var download=require('./DownloadAbility.js');
 
 
 //**GLOBAL VARIABLES TO DEAL WITH THE FUNCTIONS**//
@@ -17,7 +18,8 @@ var returnPeriods=require('./returnPeriods.js');
 var dates = [];
 var values = [];
 var units;
-var returnShapes;
+// var returnShapes;
+var config = {};
 var endpoint="http://0.0.0.0:8090/api/";
 
 //** THIS FUNCTIONS RETRIEVES THE HISTORICAL DATA IN A GRAPH **//
@@ -47,7 +49,10 @@ module.exports= {
         console.log(dates);
         values =response_timeSeries['flow'];
         units =data['units']['short'];
-
+        var title_download = `Historical Simulation ${title}`
+        var xTitle = "Dates";
+        var yTitle =`${data['units']['name']} ${data['units']['short']}`;
+        config = download.addConfig(xTitle, yTitle, dates, values,title_download);
       },
 
       complete: function() {
@@ -122,11 +127,12 @@ module.exports= {
         //Removing any exisisting element with the same name//
 
         Plotly.purge(htmlElement);
-        Plotly.newPlot(htmlElement, data_array, layout);
+        Plotly.newPlot(htmlElement, data_array, layout, config);
 
           returnPeriods.graph_rp(reachid,htmlElement,width,height);
-          dates=[]
-          values = []
+          dates=[];
+          values = [];
+          config = {};
       }
     });
   },
