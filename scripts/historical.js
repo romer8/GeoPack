@@ -37,8 +37,8 @@ module.exports= {
       dataType: 'json',
       contentType:'application/json',
       success: function(data) {
-        console.log('we have succeed gethistorical');
-        console.log(data);
+        // console.log('we have succeed gethistorical');
+        // console.log(data);
         var response_timeSeries = data['time_series'];
         var dates_prep = response_timeSeries['datetime'];
         var dates_prep = response_timeSeries['datetime'];
@@ -46,9 +46,10 @@ module.exports= {
           var onlyDate = x.split('T')[0];
           dates.push(onlyDate);
         });
-        console.log(dates);
+        // console.log(dates);
         values =response_timeSeries['flow'];
         units =data['units']['short'];
+        units_name = data['units']['name'];
         var title_download = `Historical Simulation ${title}`
         var xTitle = "Dates";
         var yTitle =`${data['units']['name']} ${data['units']['short']}`;
@@ -120,8 +121,19 @@ module.exports= {
             title: 'Historical Streamflow<br>'+title,
             width: width,
             height: height,
-            xaxis: {title: 'Date',showgrid: false},
-            yaxis: {title: units, range: [0, Math.max(...data_array[0].y) + Math.max(...data_array[0].y)/5],showgrid: false},
+            xaxis: {title: 'Date',
+              autorange: true,
+              showgrid: false,
+              zeroline: false,
+              showline: false,
+            },
+            yaxis: {
+              title: `${units_name} ${units}`,
+              autorange: true,
+              showgrid: false,
+              zeroline: false,
+              showline: false,
+            }
 
         }
         //Removing any exisisting element with the same name//
