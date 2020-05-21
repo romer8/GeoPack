@@ -8,13 +8,14 @@ var Plotly = require('plotly.js-dist');
 var $ = require("jquery");
 var download=require('./DownloadAbility.js');
 var math=require('mathjs');
+var randomColor = require('randomcolor'); // import the script
 
 
 //**GLOBAL VARIABLES TO DEAL WITH THE FUNCTIONS**//
-var dates = {highres: [], dates: []};
-var values = {highres: [], max: [], mean: [], min: [], std_dev_range_lower: [], std_dev_range_upper: []};
-var units;
-var config = {};
+// var dates = {highres: [], dates: []};
+// var values = {highres: [], max: [], mean: [], min: [], std_dev_range_lower: [], std_dev_range_upper: [],emsembles:{}};
+// var units;
+// var config = {};
 var endpoint="http://0.0.0.0:8090/api/"
 //** THIS FUNCTIONS RETRIEVES THE FORECAST DATA IN A GRAPH **//
 
@@ -23,7 +24,10 @@ module.exports= {
   width = (typeof width !== 'undefined') ?  width : 500;
   height = (typeof heigth !== 'undefined') ?  heigth : 500;
   title = (typeof title !== 'undefined') ?  title : 'Reach ID: ' + reachid;
-
+  var dates = {highres: [], dates: []};
+  var values = {highres: [], max: [], mean: [], min: [], std_dev_range_lower: [], std_dev_range_upper: [],emsembles:{}};
+  var units;
+  var config = {};
 
   var layer_URL=endpoint +"/ForecastRecords/?reach_id="+reachid+"&return_format=json";
     $.ajax({
@@ -33,18 +37,14 @@ module.exports= {
         console.log(data);
         var response_timeSeries = data['time_series'];
         var dates_prep = response_timeSeries['datetime'];
-        var dates_prep = response_timeSeries['datetime'];
-        dates_prep.forEach(function(x){
-          var onlyDate = x.split('T')[0];
-          dates['dates'].push(onlyDate);
-        });
+        dates['dates']=dates_prep
+
         values['mean'] = data['time_series']['flow'];
-        console.log(values['mean']);
-        console.log(Math.max(...values['mean']));
+
         units =data['units']['short'];
         units_name = data['units']['name'];
 
-        var title_download = `Historical Simulation ${title}`
+        var title_download = `Forecast Mean Records ${title}`
         var xTitle = "Dates";
         var yTitle =`${data['units']['name']} ${data['units']['short']}`;
         config = download.addConfig(xTitle, yTitle, dates['dates'], values['mean'],title_download);
@@ -91,11 +91,135 @@ module.exports= {
          Plotly.newPlot(htmlELement, data, layout,config);
          var index = data[0].x.length-1;
 
-
-         dates.highres = [], dates.dates = [];
-         values.highres = [], values.max = [], values.mean = [], values.min = [], values.std_dev_range_lower = [], values.std_dev_range_upper = [];
+         // dates.highres = [], dates.dates = [];
+         // values.highres = [], values.max = [], values.mean = [], values.min = [], values.std_dev_range_lower = [], values.std_dev_range_upper = [];
       },
     });
   },
+  graph_emsembles: function(reachid,htmlELement,arrayEnsemble, title, width,height){
+    width = (typeof width !== 'undefined') ?  width : 500;
+    height = (typeof heigth !== 'undefined') ?  heigth : 500;
+    title = (typeof title !== 'undefined') ?  title : 'Reach ID: ' + reachid;
+    arrayEnsemble = (typeof arrayEnsemble !== 'string') ? arrayEnsemble: Array.from(Array(52).keys());
+    var dates = {highres: [], dates: []};
+    var values = {highres: [], max: [], mean: [], min: [], std_dev_range_lower: [], std_dev_range_upper: [],emsembles:{}};
+    var units;
+    var config = {};
+    var dataToDownload={};
+    var title_download = `Forecast Ensembles ${title}`
+
+    var layer_URL=endpoint +"/ForecastEnsembles/?reach_id="+reachid+"&return_format=json";
+    $.ajax({
+      type: 'GET',
+      url: layer_URL,
+      success: function(data) {
+        // console.log(data);
+        var response_timeSeries = data['time_series'];
+        var dates_prep = response_timeSeries['datetime'];
+        var dates_prep_high_res = response_timeSeries['datetime_high_res'];
+        // Pushing the dates for the normal ensembles //
+        dates['dates']=dates_prep;
+        dates['highres'] = dates_prep_high_res;
+
+        const time_series_keys = Object.keys(response_timeSeries);
+        time_series_keys.forEach(function(x){
+          if(x !== "datetime" && x!=="datetime_high_res" ){
+            values['emsembles'][`${x}`] = response_timeSeries[`${x}`];
+          }
+        });
+        units =data['units']['short'];
+        units_name = data['units']['name'];
+
+
+    },
+    complete: function() {
+       const values_emsembles_keys = Object.keys(values['emsembles']);
+       var data=[];
+       //making the trace object for all the emsembles //
+       var numberEnsemble = 0;
+
+       values_emsembles_keys.forEach(function(x){
+         numberEnsemble = numberEnsemble +1 ;
+         if(arrayEnsemble.includes(numberEnsemble)){
+           var nameEnsemble = x.split('_m')[0]
+           if(x !== "ensemble_52_m^3/s"){
+             var singleEmsemble={
+               name: `${nameEnsemble}`,
+               x: dates.dates,
+               y: values['emsembles'][`${x}`],
+               mode: "scatter",
+               line: {
+                 color: randomColor(),
+                 // shape: 'spline'
+               }
+             }
+             data.push(singleEmsemble);
+
+             // add data to download //
+             if(!dataToDownload.hasOwnProperty('datetime')){
+               dataToDownload['datetime']=dates.dates;
+             }
+
+             dataToDownload[`${x}`]=values['emsembles'][`${x}`]
+           }
+           else{
+             console.log(x);
+             console.log(values['emsembles'][`${x}`]);
+             console.log(dates.highres);
+             var singleEmsemble={
+               name: `${nameEnsemble}`,
+               x: dates.highres,
+               y: values['emsembles'][`${x}`],
+               mode: "lines",
+               line: {
+                 color: randomColor(),
+                 // shape: 'spline'
+               }
+             }
+             data.push(singleEmsemble);
+
+             dataToDownload['datetime_high_res'] = dates.highres;
+             dataToDownload[`${x}`] = values['emsembles'][`${x}`];
+
+           }
+
+         }
+
+       })
+       console.log(dataToDownload);
+       config = download.addConfigObject(dataToDownload,title_download);
+
+         var layout = {
+             width:width,
+             height:height,
+             title:'Forecast Emsembles<br>' + title,
+             xaxis: {
+                title: 'Date',
+                autorange: true,
+                showgrid: false,
+                zeroline: false,
+                showline: false,
+             },
+
+             yaxis: {
+               title: `${units_name} ${units}`,
+               autorange: true,
+               showgrid: false,
+               zeroline: false,
+               showline: false,
+             },
+             //shapes: returnShapes,
+         };
+
+         //Removing any exisisting element with the same name//
+         Plotly.purge(htmlELement);
+         Plotly.newPlot(htmlELement, data, layout,config);
+
+      },
+    });
+
+
+
+  }
 
 }
