@@ -40,13 +40,7 @@ module.exports= {
         // console.log('we have succeed gethistorical');
         // console.log(data);
         var response_timeSeries = data['time_series'];
-        var dates_prep = response_timeSeries['datetime'];
-        var dates_prep = response_timeSeries['datetime'];
-        dates_prep.forEach(function(x){
-          var onlyDate = x.split('T')[0];
-          dates.push(onlyDate);
-        });
-        // console.log(dates);
+        dates = response_timeSeries['datetime'];
         values =response_timeSeries['flow'];
         units =data['units']['short'];
         units_name = data['units']['name'];
