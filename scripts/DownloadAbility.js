@@ -40,27 +40,51 @@ module.exports={
         var indexDateTimeHighRes = header.indexOf("datetime_high_res");
         if(indexDateTimeHighRes > -1){
           header.splice(indexDateTimeHighRes,1);
-          var indexValuesHighRes = header.indexOf("ensemble_52_m^3/s");
-          header.splice(indexValuesHighRes,1);
-          header.push(header2[indexDateTimeHighRes]);
-          header.push(header2[header2.indexOf("ensemble_52_m^3/s")]);
-          csvData.push(header);
-          console.log("this is the header");
-          console.log(header);
-          console.log(xObject);
-          for (var i = 0; i < xObject[`ensemble_52_m^3/s`].length; i++){ //data
-            var line = [];
-            header.forEach(function(x){
-              console.log(xObject[`${x}`]);
-              if(xObject[`${x}`].length > i ){
-                line.push(xObject[`${x}`][i]);
-              }
-              else{
-                line.push(xObject[`${x}`][i]);
-              }
-            })
-            csvData.push(line);
+          var indexValuesHighRes;
+
+          if(header.indexOf("ensemble_52_m^3/s") > 0){
+            indexValuesHighRes = header.indexOf("ensemble_52_m^3/s");
+            header.splice(indexValuesHighRes,1);
+            header.push(header2[indexDateTimeHighRes]);
+            header.push(header2[header2.indexOf("ensemble_52_m^3/s")]);
+            csvData.push(header);
+
+            for (var i = 0; i < xObject[`ensemble_52_m^3/s`].length; i++){ //data
+              var line = [];
+              header.forEach(function(x){
+                console.log(xObject[`${x}`]);
+                if(xObject[`${x}`].length > i ){
+                  line.push(xObject[`${x}`][i]);
+                }
+                else{
+                  line.push(xObject[`${x}`][i]);
+                }
+              })
+              csvData.push(line);
+            }
           }
+          else{
+            indexValuesHighRes = header.indexOf("high_res");
+            header.splice(indexValuesHighRes,1);
+            header.push(header2[indexDateTimeHighRes]);
+            header.push(header2[header2.indexOf("high_res")]);
+            csvData.push(header);
+
+            for (var i = 0; i < xObject[`high_res`].length; i++){ //data
+              var line = [];
+              header.forEach(function(x){
+                console.log(xObject[`${x}`]);
+                if(xObject[`${x}`].length > i ){
+                  line.push(xObject[`${x}`][i]);
+                }
+                else{
+                  line.push(xObject[`${x}`][i]);
+                }
+              })
+              csvData.push(line);
+            }
+          }
+
         }
         else{
           csvData.push(header);
