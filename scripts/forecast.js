@@ -102,7 +102,7 @@ module.exports= {
     title = (typeof title !== 'undefined') ?  title : 'Reach ID: ' + reachid;
     arrayEnsemble = (typeof arrayEnsemble !== 'string') ? arrayEnsemble: Array.from(Array(52).keys());
     var dates = {highres: [], dates: []};
-    var values = {highres: [], max: [], mean: [], min: [], std_dev_range_lower: [], std_dev_range_upper: [],emsembles:{}};
+    var values = {emsembles:{}};
     var units;
     var config = {};
     var dataToDownload={};
@@ -217,8 +217,117 @@ module.exports= {
 
       },
     });
+  },
+  graph_stats:function(reachid,htmlELement, title, width,height){
+    width = (typeof width !== 'undefined') ?  width : 500;
+    height = (typeof heigth !== 'undefined') ?  heigth : 500;
+    title = (typeof title !== 'undefined') ?  title : 'Reach ID: ' + reachid;
+    var dates = {highres: [], dates: []};
+    var values = {};
+    var style = {
+      'flow_25%_m^3/s':{fill:'tonexty', Linecolor:'rgb(152, 251, 152)' },
+      'flow_75%_m^3/s':{fill:'tonexty', Linecolor:'rgb(34, 139, 34)' },
+      'flow_avg_m^3/s':{fill:'none', Linecolor:'blue' },
+      'flow_max_m^3/s':{fill:'tonexty', Linecolor:'rgb(147, 8, 243)'},
+      'flow_min_m^3/s':{fill:'none', Linecolor:'rgb(29, 234, 228)' },
+      'high_res':{fill:'none', Linecolor:'black' },
+    }
+    var units;
+    var config = {};
+    var dataToDownload={};
+    var dataPlot=[];
+    var title_download = `Forecast Stats ${title}`
+
+    var layer_URL=endpoint +"/ForecastStats/?reach_id="+reachid+"&return_format=json";
+    $.ajax({
+      type: 'GET',
+      url: layer_URL,
+      success: function(data) {
+        // console.log(data);
+        var response_timeSeries = data['time_series'];
+        var dates_prep = response_timeSeries['datetime'];
+        var dates_prep_high_res = response_timeSeries['datetime_high_res'];
+        // Pushing the dates for the normal ensembles //
+        dates['dates']=dates_prep;
+        dates['highres'] = dates_prep_high_res;
+
+        const time_series_keys = Object.keys(response_timeSeries);
+        time_series_keys.forEach(function(x){
+          if(x !== "datetime" && x!=="datetime_high_res" ){
+            values[`${x}`] = response_timeSeries[`${x}`];
+            if(x !== "high_res"){
+
+              var singleEmsemble={
+                name: `${x}`,
+                x: dates.dates,
+                y: values[`${x}`],
+                mode: "scatter",
+                fill:style[`${x}`]['fill'],
+                line: {
+                  color:style[`${x}`]['Linecolor'] ,
+                }
+              }
+              if(!dataToDownload.hasOwnProperty('datetime')){
+                dataToDownload['datetime']=dates.dates;
+              }
+
+              dataToDownload[`${x}`]=values[`${x}`]
+              dataPlot.push(singleEmsemble);
+            }
+            else{
+              var singleEmsemble={
+                name: `${x}`,
+                x: dates.highres,
+                y: values[`${x}`],
+                mode: "scatter",
+                line: {
+                  color: style[`${x}`]['Linecolor'],
+                }
+              }
+              dataToDownload['datetime_high_res'] = dates.highres;
+              dataToDownload[`${x}`] = values[`${x}`];
+              dataPlot.push(singleEmsemble);
+            }
+          }
+        });
+        units =data['units']['short'];
+        units_name = data['units']['name'];
 
 
+    },
+    complete: function() {
+
+       console.log(dataToDownload);
+       config = download.addConfigObject(dataToDownload,title_download);
+
+         var layout = {
+             width:width,
+             height:height,
+             title:'Forecast Emsembles<br>' + title,
+             xaxis: {
+                title: 'Date',
+                autorange: true,
+                showgrid: false,
+                zeroline: false,
+                showline: false,
+             },
+
+             yaxis: {
+               title: `${units_name} ${units}`,
+               autorange: true,
+               showgrid: false,
+               zeroline: false,
+               showline: false,
+             },
+             //shapes: returnShapes,
+         };
+
+         //Removing any exisisting element with the same name//
+         Plotly.purge(htmlELement);
+         Plotly.newPlot(htmlELement, dataPlot, layout,config);
+
+      },
+    });
 
   }
 
