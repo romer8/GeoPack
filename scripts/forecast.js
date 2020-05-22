@@ -9,21 +9,20 @@ var $ = require("jquery");
 var download=require('./DownloadAbility.js');
 var math=require('mathjs');
 var randomColor = require('randomcolor'); // import the script
+var returnPeriods=require('./returnPeriods.js');
 
 
 //**GLOBAL VARIABLES TO DEAL WITH THE FUNCTIONS**//
-// var dates = {highres: [], dates: []};
-// var values = {highres: [], max: [], mean: [], min: [], std_dev_range_lower: [], std_dev_range_upper: [],emsembles:{}};
-// var units;
-// var config = {};
+
 var endpoint="http://0.0.0.0:8090/api/"
 //** THIS FUNCTIONS RETRIEVES THE FORECAST DATA IN A GRAPH **//
 
 module.exports= {
-  graph_fr: function(reachid,htmlELement, title, width,height){
+  graph_fr: function(reachid,htmlElement, title,rp, width,height){
   width = (typeof width !== 'undefined') ?  width : 500;
   height = (typeof heigth !== 'undefined') ?  heigth : 500;
   title = (typeof title !== 'undefined') ?  title : 'Reach ID: ' + reachid;
+  rp = (typeof rp !== 'undefined') ?  rp : false;
   var dates = {highres: [], dates: []};
   var values = {highres: [], max: [], mean: [], min: [], std_dev_range_lower: [], std_dev_range_upper: [],emsembles:{}};
   var units;
@@ -87,16 +86,19 @@ module.exports= {
          };
 
          //Removing any exisisting element with the same name//
-         Plotly.purge(htmlELement);
-         Plotly.newPlot(htmlELement, data, layout,config);
+         Plotly.purge(htmlElement);
+         Plotly.newPlot(htmlElement, data, layout,config);
          var index = data[0].x.length-1;
+         if(rp){
+           returnPeriods.graph_rp(reachid,htmlElement,width,height);
+         }
 
          // dates.highres = [], dates.dates = [];
          // values.highres = [], values.max = [], values.mean = [], values.min = [], values.std_dev_range_lower = [], values.std_dev_range_upper = [];
       },
     });
   },
-  graph_emsembles: function(reachid,htmlELement,arrayEnsemble, title, width,height){
+  graph_emsembles: function(reachid,htmlElement,arrayEnsemble, title, width,height){
     width = (typeof width !== 'undefined') ?  width : 500;
     height = (typeof heigth !== 'undefined') ?  heigth : 500;
     title = (typeof title !== 'undefined') ?  title : 'Reach ID: ' + reachid;
@@ -212,13 +214,13 @@ module.exports= {
          };
 
          //Removing any exisisting element with the same name//
-         Plotly.purge(htmlELement);
-         Plotly.newPlot(htmlELement, data, layout,config);
+         Plotly.purge(htmlElement);
+         Plotly.newPlot(htmlElement, data, layout,config);
 
       },
     });
   },
-  graph_stats:function(reachid,htmlELement, title, width,height){
+  graph_stats:function(reachid,htmlElement, title, width,height){
     width = (typeof width !== 'undefined') ?  width : 500;
     height = (typeof heigth !== 'undefined') ?  heigth : 500;
     title = (typeof title !== 'undefined') ?  title : 'Reach ID: ' + reachid;
@@ -265,7 +267,8 @@ module.exports= {
                 fill:style[`${x}`]['fill'],
                 line: {
                   color:style[`${x}`]['Linecolor'] ,
-                }
+                },
+                // stackgroup:'one'
               }
               if(!dataToDownload.hasOwnProperty('datetime')){
                 dataToDownload['datetime']=dates.dates;
@@ -323,8 +326,8 @@ module.exports= {
          };
 
          //Removing any exisisting element with the same name//
-         Plotly.purge(htmlELement);
-         Plotly.newPlot(htmlELement, dataPlot, layout,config);
+         Plotly.purge(htmlElement);
+         Plotly.newPlot(htmlElement, dataPlot, layout,config);
 
       },
     });
