@@ -31,7 +31,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/romer8/GeoPack.git"
+    "url": "git+ssh://git@github.com/romer8/GEOgloWS-JavaScript-Package.git"
   },
   "keywords": [
     "BYU"
@@ -39,10 +39,10 @@
   "author": "Hydroinformatics Lab BYU",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/romer8/GeoPack/issues"
+    "url": "https://github.com/romer8/GEOgloWS-JavaScript-Package/issues"
   },
   "files": [
     "dist"
   ],
-  "homepage": "https://github.com/romer8/GeoPack#readme"
+  "homepage": "https://github.com/romer8/GEOgloWS-JavaScript-Package#readme"
 }
