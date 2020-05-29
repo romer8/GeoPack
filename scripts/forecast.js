@@ -90,7 +90,7 @@ module.exports= {
          Plotly.newPlot(htmlElement, data, layout,config);
          var index = data[0].x.length-1;
          if(rp){
-           returnPeriods.graph_rp(reachid,htmlElement,width,height);
+           // returnPeriods.graph_rp(reachid,htmlElement,width,height);
          }
 
          // dates.highres = [], dates.dates = [];
@@ -226,14 +226,6 @@ module.exports= {
     title = (typeof title !== 'undefined') ?  title : 'Reach ID: ' + reachid;
     var dates = {highres: [], dates: []};
     var values = {};
-    var style = {
-      'flow_25%_m^3/s':{fill:'tonexty', Linecolor:'rgb(152, 251, 152)' },
-      'flow_75%_m^3/s':{fill:'tonexty', Linecolor:'rgb(34, 139, 34)' },
-      'flow_avg_m^3/s':{fill:'none', Linecolor:'blue' },
-      'flow_max_m^3/s':{fill:'tonexty', Linecolor:'rgb(147, 8, 243)'},
-      'flow_min_m^3/s':{fill:'none', Linecolor:'rgb(29, 234, 228)' },
-      'high_res':{fill:'none', Linecolor:'black' },
-    }
     var units;
     var config = {};
     var dataToDownload={};
@@ -245,54 +237,119 @@ module.exports= {
       type: 'GET',
       url: layer_URL,
       success: function(data) {
-        // console.log(data);
-        var response_timeSeries = data['time_series'];
-        var dates_prep = response_timeSeries['datetime'];
-        var dates_prep_high_res = response_timeSeries['datetime_high_res'];
-        // Pushing the dates for the normal ensembles //
-        dates['dates']=dates_prep;
-        dates['highres'] = dates_prep_high_res;
+        values = data['time_series'];
+        dates['dates'] = values['datetime'];
+        dates['highres']= values['datetime_high_res'];
 
-        const time_series_keys = Object.keys(response_timeSeries);
-        time_series_keys.forEach(function(x){
-          if(x !== "datetime" && x!=="datetime_high_res" ){
-            values[`${x}`] = response_timeSeries[`${x}`];
-            if(x !== "high_res"){
+        var min={
+          name:'Minimum Flow',
+          x: dates['dates'],
+          y:values['flow_min_m^3/s'],
+          mode:'lines',
+          legendgroup:'boundaries',
+          fill:'none',
+          showlegend:false,
+          hoverinfo:'name+y',
+          legendgroup:'maxMin',
+          line:{color:'darkblue', dash:'dash'}
+        };
+        var maxAndMin ={
+          name:'Maximum & Minimum Flow',
+          x: dates['dates'],
+          y:values['flow_max_m^3/s'],
+          mode: "lines",
+          fill:'tonexty',
+          showlegend: true,
+          hoverinfo:'skip',
+          legendgroup:'maxMin',
+          line:{color:'lightblue', width:0}
+        };
+        var max={
+          name:'Minimum Flow',
+          x: dates['dates'],
+          y:values['flow_max_m^3/s'],
+          mode:'lines',
+          fill:'none',
+          showlegend:false,
+          hoverinfo:'name+y',
+          legendgroup:'maxMin',
+          line:{color:'darkblue', dash:'dash'}
+        };
+        // 25% and 75% percentatiles
+        var flow25={
+          name:'Flow 25% Percentile',
+          x: dates['dates'],
+          y:values['flow_25%_m^3/s'],
+          mode:'lines',
+          legendgroup:'boundaries',
+          fill:'none',
+          showlegend:false,
+          hoverinfo:'name+y',
+          legendgroup:'25_75',
+          line:{color:'green', dash:'dash'}
+        };
+        var flow25_75 ={
+          name:'25-75 Percentile Flow',
+          x: dates['dates'],
+          y:values['flow_75%_m^3/s'],
+          mode: "lines",
+          fill:'tonexty',
+          showlegend: true,
+          hoverinfo:'skip',
+          legendgroup:'25_75',
+          line:{color:'lightgreen', width:0}
+        };
+        var flow75={
+          name:'Flow 75% Percentile',
+          x: dates['dates'],
+          y:values['flow_75%_m^3/s'],
+          mode:'lines',
+          fill:'none',
+          showlegend:false,
+          hoverinfo:'name+y',
+          legendgroup:'25_75',
+          line:{color:'green', dash:'dash'}
+        };
+        // Mean
+        var mean={
+          name:'Ensemble Average Flow',
+          x: dates['dates'],
+          y:values['flow_avg_m^3/s'],
+          mode:'lines',
+          fill:'none',
+          showlegend:true,
+          hoverinfo:'name+y',
+          line:{color:'blue'}
+        };
+        // highres
+        var highres={
+          name:'High Resolution Forecast',
+          x: dates['dates'],
+          y:values['high_res'],
+          mode:'lines',
+          fill:'none',
+          showlegend:true,
+          hoverinfo:'name+y',
+          line:{color:'black'}
+        }
+        dataPlot.push(min);
+        dataPlot.push(maxAndMin);
+        dataPlot.push(max);
+        dataPlot.push(flow25);
+        dataPlot.push(flow25_75);
+        dataPlot.push(flow75);
+        dataPlot.push(mean);
+        dataPlot.push(highres);
+        // Download//
+        dataToDownload['datetime']=dates.dates;
+        dataToDownload['flow_25%_m^3/s']=values['flow_25%_m^3/s'];
+        dataToDownload['flow_75%_m^3/s']=values['flow_75%_m^3/s'];
+        dataToDownload['flow_max_m^3/s']=values['flow_max_m^3/s'];
+        dataToDownload['flow_min_m^3/s']=values['flow_min_m^3/s'];
+        dataToDownload['flow_avg_m^3/s']=values['flow_avg_m^3/s'];
+        dataToDownload['datetime_high_res'] = dates.highres;
+        dataToDownload['high_res']=values['high_res'];
 
-              var singleEmsemble={
-                name: `${x}`,
-                x: dates.dates,
-                y: values[`${x}`],
-                mode: "scatter",
-                fill:style[`${x}`]['fill'],
-                line: {
-                  color:style[`${x}`]['Linecolor'] ,
-                },
-                // stackgroup:'one'
-              }
-              if(!dataToDownload.hasOwnProperty('datetime')){
-                dataToDownload['datetime']=dates.dates;
-              }
-
-              dataToDownload[`${x}`]=values[`${x}`]
-              dataPlot.push(singleEmsemble);
-            }
-            else{
-              var singleEmsemble={
-                name: `${x}`,
-                x: dates.highres,
-                y: values[`${x}`],
-                mode: "scatter",
-                line: {
-                  color: style[`${x}`]['Linecolor'],
-                }
-              }
-              dataToDownload['datetime_high_res'] = dates.highres;
-              dataToDownload[`${x}`] = values[`${x}`];
-              dataPlot.push(singleEmsemble);
-            }
-          }
-        });
         units =data['units']['short'];
         units_name = data['units']['name'];
 
@@ -306,7 +363,7 @@ module.exports= {
          var layout = {
              width:width,
              height:height,
-             title:'Forecast Emsembles<br>' + title,
+             title:'Forecast Statistics<br>' + title,
              xaxis: {
                 title: 'Date',
                 autorange: true,
@@ -322,9 +379,7 @@ module.exports= {
                zeroline: false,
                showline: false,
              },
-             //shapes: returnShapes,
          };
-
          //Removing any exisisting element with the same name//
          Plotly.purge(htmlElement);
          Plotly.newPlot(htmlElement, dataPlot, layout,config);
