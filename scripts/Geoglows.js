@@ -11,7 +11,10 @@ This is the wrapper for the four modules related to the API:
 */
 // var forecast=require('./scripts/getForecast.js');
 // var historical=require('./scripts/getHistorical.js');
-var historical2=require('./historical.js');
+var forecast = require('./forecast.js');
+var historical=require('./historical.js');
+var seasonal = require('./seasonal.js')
+
 // var seasonal=require('./scripts/getSeasonal.js');
 
 /*
@@ -22,6 +25,8 @@ var historical2=require('./historical.js');
   module.exports= {
     // FORECAST: forecast,
     // HISTORICAL: historical,
-    historical: historical2,
+    forecast:forecast,
+    historical: historical,
+    seasonal:seasonal    
     // SEASONAL: seasonal
   }
