@@ -220,10 +220,11 @@ module.exports= {
       },
     });
   },
-  graph_stats:function(reachid,htmlElement, title, width,height){
+  graph_stats:function(reachid,htmlElement, title,rp,width,height){
     width = (typeof width !== 'undefined') ?  width : 500;
     height = (typeof heigth !== 'undefined') ?  heigth : 500;
     title = (typeof title !== 'undefined') ?  title : 'Reach ID: ' + reachid;
+    rp = (typeof rp !== 'undefined') ?  rp : false;
     var dates = {highres: [], dates: []};
     var values = {};
     var units;
@@ -352,37 +353,110 @@ module.exports= {
 
         units =data['units']['short'];
         units_name = data['units']['name'];
+        config = download.addConfigObject(dataToDownload,title_download);
+        var maxValue = Math.max(...values['flow_max_m^3/s']);
+        console.log("max value");
+        console.log(maxValue);
+        if(rp){
+          var layer_URL_rp=endpoint+"ReturnPeriods/?reach_id="+reachid+"&return_format=json";
+          // console.log("inside getreturnperiods");
+            $.ajax({
+              type:'GET',
+              assync: true,
+              url: layer_URL_rp,
+              dataType: 'json',
+              contentType:'application/json',
+              success: function (data) {
+                returnPeriodsObject = data['return_periods'];
+                if(maxValue < returnPeriodsObject['return_period_2']){
+                  returnPeriods.graph_rp(values,returnPeriodsObject,dataPlot);
+                }
+                else{
+                  returnPeriods.graph_rp(values,returnPeriodsObject,dataPlot,true);
+                }
+
+                var layout = {
+                    width:width,
+                    height:height,
+                    title:'Forecast Statistics<br>' + title,
+                    xaxis: {
+                       title: 'Date',
+                       autorange: true,
+                       showgrid: false,
+                       zeroline: false,
+                       showline: false,
+                    },
+
+                    yaxis: {
+                      title: `${units_name} ${units}`,
+                      autorange: true,
+                      showgrid: false,
+                      zeroline: false,
+                      showline: false,
+                    },
+                };
+
+                Plotly.purge(htmlElement);
+                Plotly.newPlot(htmlElement, dataPlot, layout,config);
+                }
+            })
+        }
+        else{
+          var layout = {
+              width:width,
+              height:height,
+              title:'Forecast Statistics<br>' + title,
+              xaxis: {
+                 title: 'Date',
+                 autorange: true,
+                 showgrid: false,
+                 zeroline: false,
+                 showline: false,
+              },
+
+              yaxis: {
+                title: `${units_name} ${units}`,
+                autorange: true,
+                showgrid: false,
+                zeroline: false,
+                showline: false,
+              },
+          };
+          //Removing any exisisting element with the same name//
+          Plotly.purge(htmlElement);
+          Plotly.newPlot(htmlElement, dataPlot, layout,config);
+        }
+
 
 
     },
     complete: function() {
 
-       console.log(dataToDownload);
-       config = download.addConfigObject(dataToDownload,title_download);
-
-         var layout = {
-             width:width,
-             height:height,
-             title:'Forecast Statistics<br>' + title,
-             xaxis: {
-                title: 'Date',
-                autorange: true,
-                showgrid: false,
-                zeroline: false,
-                showline: false,
-             },
-
-             yaxis: {
-               title: `${units_name} ${units}`,
-               autorange: true,
-               showgrid: false,
-               zeroline: false,
-               showline: false,
-             },
-         };
-         //Removing any exisisting element with the same name//
-         Plotly.purge(htmlElement);
-         Plotly.newPlot(htmlElement, dataPlot, layout,config);
+       // config = download.addConfigObject(dataToDownload,title_download);
+       //
+       //   var layout = {
+       //       width:width,
+       //       height:height,
+       //       title:'Forecast Statistics<br>' + title,
+       //       xaxis: {
+       //          title: 'Date',
+       //          autorange: true,
+       //          showgrid: false,
+       //          zeroline: false,
+       //          showline: false,
+       //       },
+       //
+       //       yaxis: {
+       //         title: `${units_name} ${units}`,
+       //         autorange: true,
+       //         showgrid: false,
+       //         zeroline: false,
+       //         showline: false,
+       //       },
+       //   };
+       //   //Removing any exisisting element with the same name//
+       //   Plotly.purge(htmlElement);
+       //   Plotly.newPlot(htmlElement, dataPlot, layout,config);
 
       },
     });
