@@ -8,11 +8,16 @@ var Plotly = require('plotly.js-dist');
 var $ = require("jquery");
 
 //**GLOBAL VARIABLES TO DEAL WITH THE FUNCTIONS**//
+var returnShapes;
 var endpoint="http://0.0.0.0:8090/api/";
 
 
 module.exports= {
- graph_rp: function (response_timeSeries,returnPeriodsObject,data_array) {
+ graph_rp: function (response_timeSeries,returnPeriodsObject,data_array,checkvisible) {
+   checkvisible = (typeof checkvisible !== 'undefined') ?  checkvisible : false;
+   if (!checkvisible){
+     checkvisible = "legendonly";
+   }
    var nrp = {
      name:'2-yr Return Period',
      x: response_timeSeries['datetime'],
@@ -22,6 +27,7 @@ module.exports= {
      showlegend:false,
      hoverinfo:'name+y',
      legendgroup:'rp2',
+     visible:checkvisible,
      line: {color: 'rgba(128, 255, 0, 0.4)',width: 1}
    }
 
@@ -34,6 +40,7 @@ module.exports= {
      showlegend: true,
      hoverinfo:'skip',
      legendgroup:'rp2',
+     visible:checkvisible,
      line: {color: 'rgba(128, 255, 0, 0.4)', width: 0}
    }
    var nrp2 = {
@@ -45,6 +52,7 @@ module.exports= {
      showlegend: false,
      hoverinfo:'name+y',
      legendgroup:'rp5',
+     visible:checkvisible,
      line: {color: 'rgba(253, 154, 1,.4)',width: 1}
    }
    var rp5 = {
@@ -56,6 +64,7 @@ module.exports= {
      showlegend: true,
      legendgroup:'rp5',
      hoverinfo:'none',
+     visible:checkvisible,
      line: {color: 'rgba(253, 154, 1, .4)', width: 0}
    }
 
@@ -68,6 +77,7 @@ module.exports= {
      showlegend: false,
      hoverinfo:'name+y',
      legendgroup:'rp10',
+     visible:checkvisible,
      line: {color: 'rgba(255, 56, 5, .4', width: 1}
    }
 
@@ -80,6 +90,7 @@ module.exports= {
      showlegend: true,
      legendgroup:'rp10',
      hoverinfo:'none',
+     visible:checkvisible,
      line: {color: 'rgba(255, 56, 5, .4', width: 0}
    }
 
@@ -92,6 +103,7 @@ module.exports= {
      showlegend: false,
      hoverinfo:'name+y',
      legendgroup:'rp25',
+     visible:checkvisible,
      line: {color: 'rgba(255, 0, 0, .4)', width: 1}
    }
 
@@ -104,6 +116,7 @@ module.exports= {
      showlegend: true,
      legendgroup:'rp25',
      hoverinfo:'none',
+     visible:checkvisible,
      line: {color: 'rgba(255, 0, 0, .4)', width: 0}
    }
 
@@ -116,6 +129,7 @@ module.exports= {
      showlegend: false,
      hoverinfo:'name+y',
      legendgroup:'rp50',
+     visible:checkvisible,
      line: {color: 'rgba(128, 0, 106, .4)', width: 1}
    }
 
@@ -128,6 +142,7 @@ module.exports= {
      showlegend: true,
      legendgroup:'rp50',
      hoverinfo:'none',
+     visible:checkvisible,
      line: {color: 'rgba(128, 0, 106, .4)', width: 0}
    }
    var nrp6 = {
@@ -138,7 +153,8 @@ module.exports= {
      fill:'none',
      showlegend: false,
      hoverinfo:'name+y',
-     legendgroup:'rp100',
+     legendgroup:'rp50',
+     visible:checkvisible,
      line: {color: 'rgba(128, 0, 106, .4)', width: 1}
    }
    data_array.push(nrp);
