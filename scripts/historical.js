@@ -15,9 +15,7 @@ var download=require('./DownloadAbility.js');
 
 //**GLOBAL VARIABLES TO DEAL WITH THE FUNCTIONS**//
 
-var dates = [];
-var values = [];
-var units;
+
 // var returnShapes;
 var config = {};
 var endpoint="http://0.0.0.0:8090/api/";
@@ -32,28 +30,28 @@ module.exports= {
     var dataObject={};
     var layer_URL=endpoint +"HistoricSimulation/?reach_id="+reachid+"&return_format=json";
     var data_array=[];
+    var returnPeriodsObject={};
+    var dates = [];
+    var values = [];
+    var units;
 
     $.ajax({
       type:'GET',
       url: layer_URL,
       dataType: 'json',
       contentType:'application/json',
-      success: function(data) {
+      success: function(resp) {
         // console.log('we have succeed gethistorical');
         // console.log(data);
-        var response_timeSeries = data['time_series'];
+        var response_timeSeries = resp['time_series'];
         dates = response_timeSeries['datetime'];
         values =response_timeSeries['flow'];
-        units =data['units']['short'];
-        units_name = data['units']['name'];
+        units =resp['units']['short'];
+        units_name = resp['units']['name'];
         var title_download = `Historical Simulation ${title}`
         var xTitle = "Dates";
-        var yTitle =`${data['units']['name']} ${data['units']['short']}`;
+        var yTitle =`${resp['units']['name']} ${resp['units']['short']}`;
         config = download.addConfig(xTitle, yTitle, dates, values,title_download);
-      },
-
-      complete: function() {
-
         var values_object = {
             name: 'Historical Records',
             x: dates,
@@ -62,100 +60,48 @@ module.exports= {
             line: {color: 'blue'}
         }
         data_array.push(values_object);
+        var layer_URL_rp=endpoint+"ReturnPeriods/?reach_id="+reachid+"&return_format=json";
+        // console.log("inside getreturnperiods");
+          $.ajax({
+            type:'GET',
+            assync: true,
+            url: layer_URL_rp,
+            dataType: 'json',
+            contentType:'application/json',
+            success: function (data) {
+              returnPeriodsObject = data['return_periods'];
 
-        if(rp){
-          var rp2 = {
-              name: '2-yr Return Period',
-              x: [Math.min.apply(Math, values_object.x),
-                  Math.max.apply(Math, values_object.x)],
-              y: [0],
-              mode: "lines",
-              line: {color: 'rgba(128, 255, 0, 0.4)'}
-          };
-          var rp5 = {
-              name: '5-yr Return Period',
-              x: [Math.min.apply(Math, values_object.x),
-                  Math.max.apply(Math, values_object.x)],
-              y: [0],
-              mode: "lines",
-              line: {color: 'rgba(255, 255, 0, 0.4)'}
-          };
-          var rp10 = {
-              name: '10-yr Return Period',
-              x: [Math.min.apply(Math, values_object.x),
-                  Math.max.apply(Math, values_object.x)],
-              y: [0],
-              mode: "lines",
-              line: {color: 'rgba(255, 128, 0, 0.4)'}
-          };
-          var rp25 = {
-              name: '25-yr Return Period',
-              x: [Math.min.apply(Math, values_object.x),
-                  Math.max.apply(Math, values_object.x)],
-              y: [0],
-              mode: "lines",
-              line: {color: 'rgba(255, 0, 0, 0.4)'}
-          };
-          var rp50 = {
-              name: '50-yr Return Period',
-              x: [Math.min.apply(Math, values_object.x),
-                  Math.max.apply(Math, values_object.x)],
-              y: [0],
-              mode: "lines",
-              line: {color: 'rgba(255, 0, 255, 0.4)'}
-          };
-          var rp100 = {
-              name: '100-yr Return Period',
-              x: [Math.min.apply(Math, values_object.x),
-                  Math.max.apply(Math, values_object.x)],
-              y: [0],
-              mode: "lines",
-              line: {color: 'rgba(127, 0, 255, 0.4)'}
-          };
+              if(rp){
+                returnPeriods.graph_rp(response_timeSeries,returnPeriodsObject,data_array);
+              }
 
-          data_array.push(rp2);
-          data_array.push(rp5);
-          data_array.push(rp10);
-          data_array.push(rp25);
-          data_array.push(rp50);
-          data_array.push(rp100);
+              var layout = {
+                  autosize: true,
+                  showlegend:true,
+                  title: 'Historical Streamflow<br>'+title,
+                  width: width,
+                  height: height,
+                  xaxis: {title: 'Date',
+                    autorange: true,
+                    showgrid: false,
+                    zeroline: false,
+                    showline: false,
+                  },
+                  yaxis: {
+                    title: `${units_name} ${units}`,
+                    autorange: true,
+                    showgrid: false,
+                    zeroline: false,
+                    showline: false,
+                  }
 
-        }
-        var layout = {
-            autosize: true,
-            showlegend:true,
-            title: 'Historical Streamflow<br>'+title,
-            width: width,
-            height: height,
-            xaxis: {title: 'Date',
-              autorange: true,
-              showgrid: false,
-              zeroline: false,
-              showline: false,
-            },
-            yaxis: {
-              title: `${units_name} ${units}`,
-              autorange: true,
-              showgrid: false,
-              zeroline: false,
-              showline: false,
-            }
+              }
+              Plotly.purge(htmlElement);
+              Plotly.newPlot(htmlElement, data_array, layout, config);
+              }
+          })
+      },
 
-        }
-
-
-        //Removing any exisisting element with the same name//
-
-        Plotly.purge(htmlElement);
-        Plotly.newPlot(htmlElement, data_array, layout, config);
-        if(rp){
-          returnPeriods.graph_rp(reachid,htmlElement,width,height);
-
-        }
-        dates=[];
-        values = [];
-        config = {};
-      }
     });
   },
 
