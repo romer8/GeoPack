@@ -57,7 +57,9 @@ module.exports= {
             line: {
               color: 'blue',
               shape: 'spline'
-            }
+            },
+            showlegend:true,
+
         };
 
         var data = [mean_forecast];
@@ -139,10 +141,12 @@ module.exports= {
        var data=[];
        var checkLegend = true;
        var showLegendPromp = "";
+       var fillPromp ="none"
        //making the trace object for all the emsembles //
        var numberEnsemble = 0;
        if(arrayEnsemble.length > 51){
          showLegendPromp = "Ensembles";
+         fillPromp = "tonexty";
          var allEnsembles={
            name: `Ensembles 1-51 (Multicolor)`,
            x: dates.dates,
@@ -153,6 +157,7 @@ module.exports= {
          }
          data.push(allEnsembles);
          checkLegend =false;
+
        }
 
        values_emsembles_keys.forEach(function(x){
@@ -166,11 +171,12 @@ module.exports= {
                x: dates.dates,
                y: values['emsembles'][`${x}`],
                mode: "scatter",
+               fill:fillPromp,
                legendgroup:showLegendPromp,
                showlegend:checkLegend,
-               line: {
-                 color: randomColor(),
-               }
+               line:{color:randomColor()}
+
+               // line: {color: randomColor()}
              }
              data.push(singleEmsemble);
 
