@@ -115,9 +115,7 @@ module.exports= {
       type: 'GET',
       url: layer_URL,
       success: function(data) {
-        console.log("these are the emsembles");
-        console.log(data);
-        console.log(arrayEnsemble);
+
         var response_timeSeries = data['time_series'];
         var dates_prep = response_timeSeries['datetime'];
         var dates_prep_high_res = response_timeSeries['datetime_high_res'];
@@ -159,8 +157,6 @@ module.exports= {
 
        values_emsembles_keys.forEach(function(x){
          numberEnsemble = numberEnsemble +1 ;
-         console.log(numberEnsemble);
-         console.log(arrayEnsemble);
          if(arrayEnsemble.includes(numberEnsemble)){
 
            var nameEnsemble = x.split('_m')[0]
@@ -186,7 +182,6 @@ module.exports= {
              dataToDownload[`${x}`]=values['emsembles'][`${x}`]
            }
            else{
-             console.log("highres");
              var singleEmsemble={
                name: `${nameEnsemble}(high resolution)`,
                x: dates.highres,
@@ -257,140 +252,193 @@ module.exports= {
         values = data['time_series'];
         dates['dates'] = values['datetime'];
         dates['highres']= values['datetime_high_res'];
+        var layer_URL2=endpoint +"/ForecastRecords/?reach_id="+reachid+"&return_format=json";
+        $.ajax({
+          type: 'GET',
+          url: layer_URL2,
+          success: function(resp) {
+            console.log("this is the resp");
+              console.log(resp);
+              var dates2=[];
+              var values2=[];
+              for(var i = resp['time_series']['datetime'].length -1 ; i > resp['time_series']['datetime'].length - 56  ; --i ){
+                dates2.push(resp['time_series']['datetime'][i]);
+                values2.push(resp['time_series']['flow'][i]);
+              }
 
-        var min={
-          name:'Minimum Flow',
-          x: dates['dates'],
-          y:values['flow_min_m^3/s'],
-          mode:'lines',
-          legendgroup:'boundaries',
-          fill:'none',
-          showlegend:false,
-          hoverinfo:'name+y',
-          legendgroup:'maxMin',
-          line:{color:'darkblue', dash:'dash'}
-        };
-        var maxAndMin ={
-          name:'Maximum & Minimum Flow',
-          x: dates['dates'],
-          y:values['flow_max_m^3/s'],
-          mode: "lines",
-          fill:'tonexty',
-          showlegend: true,
-          hoverinfo:'skip',
-          legendgroup:'maxMin',
-          line:{color:'lightblue', width:0}
-        };
-        var max={
-          name:'Minimum Flow',
-          x: dates['dates'],
-          y:values['flow_max_m^3/s'],
-          mode:'lines',
-          fill:'none',
-          showlegend:false,
-          hoverinfo:'name+y',
-          legendgroup:'maxMin',
-          line:{color:'darkblue', dash:'dash'}
-        };
-        // 25% and 75% percentatiles
-        var flow25={
-          name:'Flow 25% Percentile',
-          x: dates['dates'],
-          y:values['flow_25%_m^3/s'],
-          mode:'lines',
-          legendgroup:'boundaries',
-          fill:'none',
-          showlegend:false,
-          hoverinfo:'name+y',
-          legendgroup:'25_75',
-          line:{color:'green', dash:'dash'}
-        };
-        var flow25_75 ={
-          name:'25-75 Percentile Flow',
-          x: dates['dates'],
-          y:values['flow_75%_m^3/s'],
-          mode: "lines",
-          fill:'tonexty',
-          showlegend: true,
-          hoverinfo:'skip',
-          legendgroup:'25_75',
-          line:{color:'lightgreen', width:0}
-        };
-        var flow75={
-          name:'Flow 75% Percentile',
-          x: dates['dates'],
-          y:values['flow_75%_m^3/s'],
-          mode:'lines',
-          fill:'none',
-          showlegend:false,
-          hoverinfo:'name+y',
-          legendgroup:'25_75',
-          line:{color:'green', dash:'dash'}
-        };
-        // Mean
-        var mean={
-          name:'Ensemble Average Flow',
-          x: dates['dates'],
-          y:values['flow_avg_m^3/s'],
-          mode:'lines',
-          fill:'none',
-          showlegend:true,
-          hoverinfo:'name+y',
-          line:{color:'blue'}
-        };
-        // highres
-        var highres={
-          name:'High Resolution Forecast',
-          x: dates['dates'],
-          y:values['high_res'],
-          mode:'lines',
-          fill:'none',
-          showlegend:true,
-          hoverinfo:'name+y',
-          line:{color:'black'}
-        }
-        dataPlot.push(min);
-        dataPlot.push(maxAndMin);
-        dataPlot.push(max);
-        dataPlot.push(flow25);
-        dataPlot.push(flow25_75);
-        dataPlot.push(flow75);
-        dataPlot.push(mean);
-        dataPlot.push(highres);
-        // Download//
-        dataToDownload['datetime']=dates.dates;
-        dataToDownload['flow_25%_m^3/s']=values['flow_25%_m^3/s'];
-        dataToDownload['flow_75%_m^3/s']=values['flow_75%_m^3/s'];
-        dataToDownload['flow_max_m^3/s']=values['flow_max_m^3/s'];
-        dataToDownload['flow_min_m^3/s']=values['flow_min_m^3/s'];
-        dataToDownload['flow_avg_m^3/s']=values['flow_avg_m^3/s'];
-        dataToDownload['datetime_high_res'] = dates.highres;
-        dataToDownload['high_res']=values['high_res'];
+              units =resp['units']['short'];
+              units_name = resp['units']['name'];
+              var forecast_records = {
+                  name: 'Forecast Records (1 week)',
+                  x: dates2,
+                  y: values2,
+                  mode: "lines",
+                  line: {
+                    color: 'red',
+                    shape: 'spline'
+                  }
+              };
+              var min={
+                name:'Minimum Flow',
+                x: dates['dates'],
+                y:values['flow_min_m^3/s'],
+                mode:'lines',
+                legendgroup:'boundaries',
+                fill:'none',
+                showlegend:false,
+                hoverinfo:'name+y',
+                legendgroup:'maxMin',
+                line:{color:'darkblue', dash:'dash'}
+              };
+              var maxAndMin ={
+                name:'Maximum & Minimum Flow',
+                x: dates['dates'],
+                y:values['flow_max_m^3/s'],
+                mode: "lines",
+                fill:'tonexty',
+                showlegend: true,
+                hoverinfo:'skip',
+                legendgroup:'maxMin',
+                line:{color:'lightblue', width:0}
+              };
+              var max={
+                name:'Minimum Flow',
+                x: dates['dates'],
+                y:values['flow_max_m^3/s'],
+                mode:'lines',
+                fill:'none',
+                showlegend:false,
+                hoverinfo:'name+y',
+                legendgroup:'maxMin',
+                line:{color:'darkblue', dash:'dash'}
+              };
+              // 25% and 75% percentatiles
+              var flow25={
+                name:'Flow 25% Percentile',
+                x: dates['dates'],
+                y:values['flow_25%_m^3/s'],
+                mode:'lines',
+                legendgroup:'boundaries',
+                fill:'none',
+                showlegend:false,
+                hoverinfo:'name+y',
+                legendgroup:'25_75',
+                line:{color:'green', dash:'dash'}
+              };
+              var flow25_75 ={
+                name:'25-75 Percentile Flow',
+                x: dates['dates'],
+                y:values['flow_75%_m^3/s'],
+                mode: "lines",
+                fill:'tonexty',
+                showlegend: true,
+                hoverinfo:'skip',
+                legendgroup:'25_75',
+                line:{color:'lightgreen', width:0}
+              };
+              var flow75={
+                name:'Flow 75% Percentile',
+                x: dates['dates'],
+                y:values['flow_75%_m^3/s'],
+                mode:'lines',
+                fill:'none',
+                showlegend:false,
+                hoverinfo:'name+y',
+                legendgroup:'25_75',
+                line:{color:'green', dash:'dash'}
+              };
+              // Mean
+              var mean={
+                name:'Ensemble Average Flow',
+                x: dates['dates'],
+                y:values['flow_avg_m^3/s'],
+                mode:'lines',
+                fill:'none',
+                showlegend:true,
+                hoverinfo:'name+y',
+                line:{color:'blue'}
+              };
+              // highres
+              var highres={
+                name:'High Resolution Forecast',
+                x: dates['dates'],
+                y:values['high_res'],
+                mode:'lines',
+                fill:'none',
+                showlegend:true,
+                hoverinfo:'name+y',
+                line:{color:'black'}
+              }
+              dataPlot.push(forecast_records);
+              dataPlot.push(min);
+              dataPlot.push(maxAndMin);
+              dataPlot.push(max);
+              dataPlot.push(flow25);
+              dataPlot.push(flow25_75);
+              dataPlot.push(flow75);
+              dataPlot.push(mean);
+              dataPlot.push(highres);
+              // Download//
+              dataToDownload['datetime']=dates.dates;
+              dataToDownload['flow_25%_m^3/s']=values['flow_25%_m^3/s'];
+              dataToDownload['flow_75%_m^3/s']=values['flow_75%_m^3/s'];
+              dataToDownload['flow_max_m^3/s']=values['flow_max_m^3/s'];
+              dataToDownload['flow_min_m^3/s']=values['flow_min_m^3/s'];
+              dataToDownload['flow_avg_m^3/s']=values['flow_avg_m^3/s'];
+              dataToDownload['datetime_high_res'] = dates.highres;
+              dataToDownload['high_res']=values['high_res'];
 
-        units =data['units']['short'];
-        units_name = data['units']['name'];
-        config = download.addConfigObject(dataToDownload,title_download);
-        var maxValue = Math.max(...values['flow_max_m^3/s']);
-        console.log("max value");
-        console.log(maxValue);
-        if(rp){
-          var layer_URL_rp=endpoint+"ReturnPeriods/?reach_id="+reachid+"&return_format=json";
-          // console.log("inside getreturnperiods");
-            $.ajax({
-              type:'GET',
-              assync: true,
-              url: layer_URL_rp,
-              dataType: 'json',
-              contentType:'application/json',
-              success: function (data) {
-                returnPeriodsObject = data['return_periods'];
-                if(maxValue < returnPeriodsObject['return_period_2']){
-                  returnPeriods.graph_rp(values,returnPeriodsObject,dataPlot);
-                }
-                else{
-                  returnPeriods.graph_rp(values,returnPeriodsObject,dataPlot);
-                }
+              units =data['units']['short'];
+              units_name = data['units']['name'];
+              config = download.addConfigObject(dataToDownload,title_download);
+              var maxValue = Math.max(...values['flow_max_m^3/s']);
+              console.log("max value");
+              console.log(maxValue);
+              if(rp){
+                var layer_URL_rp=endpoint+"ReturnPeriods/?reach_id="+reachid+"&return_format=json";
+                // console.log("inside getreturnperiods");
+                  $.ajax({
+                    type:'GET',
+                    assync: true,
+                    url: layer_URL_rp,
+                    dataType: 'json',
+                    contentType:'application/json',
+                    success: function (data) {
+                      returnPeriodsObject = data['return_periods'];
+                      if(maxValue < returnPeriodsObject['return_period_2']){
+                        returnPeriods.graph_rp(values,returnPeriodsObject,dataPlot);
+                      }
+                      else{
+                        returnPeriods.graph_rp(values,returnPeriodsObject,dataPlot);
+                      }
 
+                      var layout = {
+                          width:width,
+                          height:height,
+                          title:'Forecast Statistics<br>' + title,
+                          xaxis: {
+                             title: 'Date',
+                             autorange: true,
+                             showgrid: false,
+                             zeroline: false,
+                             showline: false,
+                          },
+
+                          yaxis: {
+                            title: `${units_name} ${units}`,
+                            autorange: true,
+                            showgrid: false,
+                            zeroline: false,
+                            showline: false,
+                          },
+                      };
+
+                      Plotly.purge(htmlElement);
+                      Plotly.newPlot(htmlElement, dataPlot, layout,config);
+                      }
+                  })
+              }
+              else{
                 var layout = {
                     width:width,
                     height:height,
@@ -411,46 +459,16 @@ module.exports= {
                       showline: false,
                     },
                 };
-
+                //Removing any exisisting element with the same name//
                 Plotly.purge(htmlElement);
                 Plotly.newPlot(htmlElement, dataPlot, layout,config);
-                }
-            })
+              }
+
+    //PONERLO AQUI
         }
-        else{
-          var layout = {
-              width:width,
-              height:height,
-              title:'Forecast Statistics<br>' + title,
-              xaxis: {
-                 title: 'Date',
-                 autorange: true,
-                 showgrid: false,
-                 zeroline: false,
-                 showline: false,
-              },
-
-              yaxis: {
-                title: `${units_name} ${units}`,
-                autorange: true,
-                showgrid: false,
-                zeroline: false,
-                showline: false,
-              },
-          };
-          //Removing any exisisting element with the same name//
-          Plotly.purge(htmlElement);
-          Plotly.newPlot(htmlElement, dataPlot, layout,config);
-        }
-
-
-
+      })
     },
-    complete: function() {
-
-      },
     });
 
   }
-
 }
