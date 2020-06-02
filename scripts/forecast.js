@@ -102,20 +102,22 @@ module.exports= {
     width = (typeof width !== 'undefined') ?  width : 500;
     height = (typeof heigth !== 'undefined') ?  heigth : 500;
     title = (typeof title !== 'undefined') ?  title : 'Reach ID: ' + reachid;
-    arrayEnsemble = (typeof arrayEnsemble !== 'string') ? arrayEnsemble: Array.from(Array(52).keys());
+    arrayEnsemble = (typeof arrayEnsemble !== 'string') ? arrayEnsemble: Array.from(Array(52).keys()).map(function(value){return value +1});
     var dates = {highres: [], dates: []};
     var values = {emsembles:{}};
     var units;
     var config = {};
     var dataToDownload={};
-    var title_download = `Forecast Ensembles ${title}`
+    var title_download = `Forecast Ensembles ${title}`;
 
     var layer_URL=endpoint +"/ForecastEnsembles/?reach_id="+reachid+"&return_format=json";
     $.ajax({
       type: 'GET',
       url: layer_URL,
       success: function(data) {
-        // console.log(data);
+        console.log("these are the emsembles");
+        console.log(data);
+        console.log(arrayEnsemble);
         var response_timeSeries = data['time_series'];
         var dates_prep = response_timeSeries['datetime'];
         var dates_prep_high_res = response_timeSeries['datetime_high_res'];
@@ -137,12 +139,30 @@ module.exports= {
     complete: function() {
        const values_emsembles_keys = Object.keys(values['emsembles']);
        var data=[];
+       var checkLegend = true;
+       var showLegendPromp = "";
        //making the trace object for all the emsembles //
        var numberEnsemble = 0;
+       if(arrayEnsemble.length > 51){
+         showLegendPromp = "Ensembles";
+         var allEnsembles={
+           name: `Ensembles 1-51 (Multicolor)`,
+           x: dates.dates,
+           y: values['emsembles'][`${values_emsembles_keys[0]}`],
+           mode: "scatter",
+           legendgroup:showLegendPromp,
+           line:{color:'white'}
+         }
+         data.push(allEnsembles);
+         checkLegend =false;
+       }
 
        values_emsembles_keys.forEach(function(x){
          numberEnsemble = numberEnsemble +1 ;
+         console.log(numberEnsemble);
+         console.log(arrayEnsemble);
          if(arrayEnsemble.includes(numberEnsemble)){
+
            var nameEnsemble = x.split('_m')[0]
            if(x !== "ensemble_52_m^3/s"){
              var singleEmsemble={
@@ -150,9 +170,10 @@ module.exports= {
                x: dates.dates,
                y: values['emsembles'][`${x}`],
                mode: "scatter",
+               legendgroup:showLegendPromp,
+               showlegend:checkLegend,
                line: {
                  color: randomColor(),
-                 // shape: 'spline'
                }
              }
              data.push(singleEmsemble);
@@ -165,18 +186,14 @@ module.exports= {
              dataToDownload[`${x}`]=values['emsembles'][`${x}`]
            }
            else{
-             console.log(x);
-             console.log(values['emsembles'][`${x}`]);
-             console.log(dates.highres);
+             console.log("highres");
              var singleEmsemble={
-               name: `${nameEnsemble}`,
+               name: `${nameEnsemble}(high resolution)`,
                x: dates.highres,
                y: values['emsembles'][`${x}`],
                mode: "lines",
-               line: {
-                 color: randomColor(),
-                 // shape: 'spline'
-               }
+               showlegend:true,
+               line:{color:'black'}
              }
              data.push(singleEmsemble);
 
@@ -188,7 +205,6 @@ module.exports= {
          }
 
        })
-       console.log(dataToDownload);
        config = download.addConfigObject(dataToDownload,title_download);
 
          var layout = {
@@ -372,7 +388,7 @@ module.exports= {
                   returnPeriods.graph_rp(values,returnPeriodsObject,dataPlot);
                 }
                 else{
-                  returnPeriods.graph_rp(values,returnPeriodsObject,dataPlot,true);
+                  returnPeriods.graph_rp(values,returnPeriodsObject,dataPlot);
                 }
 
                 var layout = {
@@ -431,32 +447,6 @@ module.exports= {
 
     },
     complete: function() {
-
-       // config = download.addConfigObject(dataToDownload,title_download);
-       //
-       //   var layout = {
-       //       width:width,
-       //       height:height,
-       //       title:'Forecast Statistics<br>' + title,
-       //       xaxis: {
-       //          title: 'Date',
-       //          autorange: true,
-       //          showgrid: false,
-       //          zeroline: false,
-       //          showline: false,
-       //       },
-       //
-       //       yaxis: {
-       //         title: `${units_name} ${units}`,
-       //         autorange: true,
-       //         showgrid: false,
-       //         zeroline: false,
-       //         showline: false,
-       //       },
-       //   };
-       //   //Removing any exisisting element with the same name//
-       //   Plotly.purge(htmlElement);
-       //   Plotly.newPlot(htmlElement, dataPlot, layout,config);
 
       },
     });
