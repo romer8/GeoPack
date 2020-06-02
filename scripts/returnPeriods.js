@@ -46,7 +46,7 @@ module.exports= {
    var nrp2 = {
      name:'5-yr Return Period',
      x: response_timeSeries['datetime'],
-     y: Array(response_timeSeries['datetime'].length).fill(returnPeriodsObject['return_period_5']+0.1),
+     y: Array(response_timeSeries['datetime'].length).fill(returnPeriodsObject['return_period_5']),
      mode: "lines",
      fill:'none',
      showlegend: false,
@@ -71,7 +71,7 @@ module.exports= {
    var nrp3 = {
      name:'10-yr Return Period',
      x: response_timeSeries['datetime'],
-     y: Array(response_timeSeries['datetime'].length).fill(returnPeriodsObject['return_period_10']+0.1),
+     y: Array(response_timeSeries['datetime'].length).fill(returnPeriodsObject['return_period_10']),
      mode: "lines",
      fill:'none',
      showlegend: false,
@@ -97,7 +97,7 @@ module.exports= {
    var nrp4 = {
      name:'25-yr Return Period',
      x: response_timeSeries['datetime'],
-     y: Array(response_timeSeries['datetime'].length).fill(returnPeriodsObject['return_period_25']+0.1),
+     y: Array(response_timeSeries['datetime'].length).fill(returnPeriodsObject['return_period_25']),
      mode: "lines",
      fill:'none',
      showlegend: false,
@@ -123,7 +123,7 @@ module.exports= {
    var nrp5 = {
      name:'50-yr Return Period',
      x: response_timeSeries['datetime'],
-     y: Array(response_timeSeries['datetime'].length).fill(returnPeriodsObject['return_period_50']+0.1),
+     y: Array(response_timeSeries['datetime'].length).fill(returnPeriodsObject['return_period_50']),
      mode: "lines",
      fill:'none',
      showlegend: false,
@@ -148,7 +148,7 @@ module.exports= {
    var nrp6 = {
      name:'100-yr Return Period',
      x: response_timeSeries['datetime'],
-     y: Array(response_timeSeries['datetime'].length).fill(returnPeriodsObject['return_period_100']+0.1),
+     y: Array(response_timeSeries['datetime'].length).fill(returnPeriodsObject['return_period_100']),
      mode: "lines",
      fill:'none',
      showlegend: false,
