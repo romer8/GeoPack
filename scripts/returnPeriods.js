@@ -41,7 +41,7 @@ module.exports= {
      hoverinfo:'skip',
      legendgroup:'rp2',
      visible:checkvisible,
-     line: {color: 'rgba(128, 255, 0, 0.4)', width: 0}
+     line: {color: 'yellow', width: 0}
    }
    var nrp2 = {
      name:'5-yr Return Period',
