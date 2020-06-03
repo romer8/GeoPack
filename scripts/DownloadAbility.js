@@ -31,6 +31,7 @@ module.exports={
     return config;
   },
   addConfigObject : function(xObject,title_graph){
+    console.log(xObject);
     var config = {
       modeBarButtonsToAdd: [{ name: 'downloadCsv', title: 'Download data as csv', icon: Plotly.Icons.disk, click: function(){
         var csvData = [];

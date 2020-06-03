@@ -9,8 +9,7 @@ This is the wrapper for the four modules related to the API:
 /*
   Exporting the Necessary Modules
 */
-// var forecast=require('./scripts/getForecast.js');
-// var historical=require('./scripts/getHistorical.js');
+
 var forecast = require('./forecast.js');
 var historical=require('./historical.js');
 var seasonal = require('./seasonal.js')
@@ -23,10 +22,7 @@ var seasonal = require('./seasonal.js')
 */
 // if(typeof exports != "undefined"){
   module.exports= {
-    // FORECAST: forecast,
-    // HISTORICAL: historical,
     forecast:forecast,
     historical: historical,
-    seasonal:seasonal    
-    // SEASONAL: seasonal
+    seasonal:seasonal
   }
