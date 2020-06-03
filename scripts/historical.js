@@ -72,7 +72,7 @@ module.exports= {
               returnPeriodsObject = data['return_periods'];
 
               if(rp){
-                returnPeriods.graph_rp(response_timeSeries,returnPeriodsObject,data_array);
+                returnPeriods.graph_rp(response_timeSeries,returnPeriodsObject,data_array,true);
               }
 
               var layout = {
