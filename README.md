@@ -1,6 +1,13 @@
 # GEOgloWS-JavaScript-Package
 
 <img alt="NPM" src="https://img.shields.io/npm/l/geoglows">
+.. |pypi-badge| image:: https://img.shields.io/pypi/v/edx-django-utils.svg
+    :target: https://pypi.python.org/pypi/edx-django-utils/
+    :alt: PyPI
+
+.. |travis-badge| image:: https://travis-ci.org/edx/edx-django-utils.svg?branch=master
+    :target: https://travis-ci.org/edx/edx-django-utils
+    :alt: Travis
 <img alt="npm" src="https://img.shields.io/npm/dm/geoglows">
 <img alt="npm" src="https://img.shields.io/npm/v/geoglows">
 <img alt="GitHub forks" src="https://img.shields.io/github/forks/romer8/GEOgloWS-JavaScript-Package?style=social">
