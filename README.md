@@ -1,5 +1,5 @@
 # GEOgloWS-JavaScript-Package
-
+|
 <img alt="NPM" src="https://img.shields.io/npm/l/geoglows">
 <img alt="npm" src="https://img.shields.io/npm/dm/geoglows">
 <img alt="npm" src="https://img.shields.io/npm/v/geoglows">
