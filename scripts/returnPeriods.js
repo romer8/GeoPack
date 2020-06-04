@@ -7,10 +7,6 @@ This Module helps with the return periods for the forecast, historical graphs,
 var Plotly = require('plotly.js-dist');
 var $ = require("jquery");
 
-//**GLOBAL VARIABLES TO DEAL WITH THE FUNCTIONS**//
-var returnShapes;
-var endpoint="http://0.0.0.0:8090/api/";
-
 
 module.exports= {
  graph_rp: function (response_timeSeries,returnPeriodsObject,data_array,checkvisible) {

@@ -16,7 +16,7 @@ var download=require('./DownloadAbility.js');
 //**GLOBAL VARIABLES TO DEAL WITH THE FUNCTIONS**//
 
 
-var endpoint="http://0.0.0.0:8090/api/";
+const ENDPOINT="https://tethys2.byu.edu/localsptapi/api/";
 
 //** THIS FUNCTIONS RETRIEVES THE HISTORICAL DATA IN A GRAPH **//
 module.exports= {
@@ -29,7 +29,7 @@ module.exports= {
     var units;
     var config = {};
     var dataObject={};
-    var layer_URL=endpoint +"SeasonalAverage/?reach_id="+reachid+"&return_format=json";
+    var layer_URL=ENDPOINT +"SeasonalAverage/?reach_id="+reachid+"&return_format=json";
     var data_array=[];
 
     $.ajax({

@@ -18,7 +18,7 @@ var download=require('./DownloadAbility.js');
 
 // var returnShapes;
 var config = {};
-var endpoint="http://0.0.0.0:8090/api/";
+const ENDPOINT="https://tethys2.byu.edu/localsptapi/api/";
 
 //** THIS FUNCTIONS RETRIEVES THE HISTORICAL DATA IN A GRAPH **//
 module.exports= {
@@ -28,7 +28,7 @@ module.exports= {
     title = (typeof title !== 'undefined') ?  title : 'Reach ID: ' + reachid;
     rp = (typeof rp !== 'undefined') ?  rp : false;
     var dataObject={};
-    var layer_URL=endpoint +"HistoricSimulation/?reach_id="+reachid+"&return_format=json";
+    var layer_URL=ENDPOINT +"HistoricSimulation/?reach_id="+reachid+"&return_format=json";
     var data_array=[];
     var returnPeriodsObject={};
     var dates = [];
@@ -59,7 +59,7 @@ module.exports= {
             line: {color: 'blue'}
         }
         data_array.push(values_object);
-        var layer_URL_rp=endpoint+"ReturnPeriods/?reach_id="+reachid+"&return_format=json";
+        var layer_URL_rp=ENDPOINT+"ReturnPeriods/?reach_id="+reachid+"&return_format=json";
           $.ajax({
             type:'GET',
             assync: true,

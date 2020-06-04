@@ -14,7 +14,7 @@ var returnPeriods=require('./returnPeriods.js');
 
 //**GLOBAL VARIABLES TO DEAL WITH THE FUNCTIONS**//
 
-var endpoint="http://0.0.0.0:8090/api/"
+const ENPOINT=var endpoint="https://tethys2.byu.edu/localsptapi/api/";
 //** THIS FUNCTIONS RETRIEVES THE FORECAST DATA IN A GRAPH **//
 
 module.exports= {
@@ -28,7 +28,7 @@ module.exports= {
   var units;
   var config = {};
 
-  var layer_URL=endpoint +"/ForecastRecords/?reach_id="+reachid+"&return_format=json";
+  var layer_URL=ENPOINT +"/ForecastRecords/?reach_id="+reachid+"&return_format=json";
     $.ajax({
       type: 'GET',
       url: layer_URL,
@@ -111,7 +111,7 @@ module.exports= {
     var dataToDownload={};
     var title_download = `Forecast Ensembles ${title}`;
 
-    var layer_URL=endpoint +"/ForecastEnsembles/?reach_id="+reachid+"&return_format=json";
+    var layer_URL=ENPOINT +"/ForecastEnsembles/?reach_id="+reachid+"&return_format=json";
     $.ajax({
       type: 'GET',
       url: layer_URL,
@@ -249,7 +249,7 @@ module.exports= {
     var dataPlot=[];
     var title_download = `Forecast Stats ${title}`
 
-    var layer_URL=endpoint +"/ForecastStats/?reach_id="+reachid+"&return_format=json";
+    var layer_URL=ENPOINT +"/ForecastStats/?reach_id="+reachid+"&return_format=json";
     $.ajax({
       type: 'GET',
       url: layer_URL,
@@ -257,7 +257,7 @@ module.exports= {
         values = data['time_series'];
         dates['dates'] = values['datetime'];
         dates['highres']= values['datetime_high_res'];
-        var layer_URL2=endpoint +"/ForecastRecords/?reach_id="+reachid+"&return_format=json";
+        var layer_URL2=ENPOINT +"/ForecastRecords/?reach_id="+reachid+"&return_format=json";
         $.ajax({
           type: 'GET',
           url: layer_URL2,
@@ -398,7 +398,7 @@ module.exports= {
               config = download.addConfigObject(dataToDownload,title_download);
               var maxValue = Math.max(...values['flow_max_m^3/s']);
               if(rp){
-                var layer_URL_rp=endpoint+"ReturnPeriods/?reach_id="+reachid+"&return_format=json";
+                var layer_URL_rp=ENPOINT+"ReturnPeriods/?reach_id="+reachid+"&return_format=json";
                   $.ajax({
                     type:'GET',
                     assync: true,
