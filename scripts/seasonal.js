@@ -38,8 +38,6 @@ module.exports= {
       dataType: 'json',
       contentType:'application/json',
       success: function(data) {
-        // console.log('we have succeed gethistorical');
-        // console.log(data);
         var response_timeSeries = data['time_series'];
         dates = response_timeSeries['datetime'];
         values =response_timeSeries['flow'];

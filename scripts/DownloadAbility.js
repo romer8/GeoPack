@@ -31,7 +31,6 @@ module.exports={
     return config;
   },
   addConfigObject : function(xObject,title_graph){
-    console.log(xObject);
     var config = {
       modeBarButtonsToAdd: [{ name: 'downloadCsv', title: 'Download data as csv', icon: Plotly.Icons.disk, click: function(){
         var csvData = [];
@@ -53,7 +52,6 @@ module.exports={
             for (var i = 0; i < xObject[`ensemble_52_m^3/s`].length; i++){ //data
               var line = [];
               header.forEach(function(x){
-                console.log(xObject[`${x}`]);
                 if(xObject[`${x}`].length > i ){
                   line.push(xObject[`${x}`][i]);
                 }
@@ -74,7 +72,6 @@ module.exports={
             for (var i = 0; i < xObject[`high_res`].length; i++){ //data
               var line = [];
               header.forEach(function(x){
-                console.log(xObject[`${x}`]);
                 if(xObject[`${x}`].length > i ){
                   line.push(xObject[`${x}`][i]);
                 }
@@ -92,7 +89,6 @@ module.exports={
           for (var i = 0; i < xObject[`${header[0]}`].length; i++){ //data
             var line = [];
             header.forEach(function(x){
-              console.log(xObject[`${x}`]);
               if(xObject[`${x}`].length > i ){
                 line.push(xObject[`${x}`][i]);
               }

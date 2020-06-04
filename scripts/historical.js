@@ -41,8 +41,7 @@ module.exports= {
       dataType: 'json',
       contentType:'application/json',
       success: function(resp) {
-        // console.log('we have succeed gethistorical');
-        // console.log(data);
+
         var response_timeSeries = resp['time_series'];
         dates = response_timeSeries['datetime'];
         values =response_timeSeries['flow'];
@@ -61,7 +60,6 @@ module.exports= {
         }
         data_array.push(values_object);
         var layer_URL_rp=endpoint+"ReturnPeriods/?reach_id="+reachid+"&return_format=json";
-        // console.log("inside getreturnperiods");
           $.ajax({
             type:'GET',
             assync: true,

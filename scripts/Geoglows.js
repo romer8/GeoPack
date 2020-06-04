@@ -20,7 +20,6 @@ var seasonal = require('./seasonal.js')
   Final wrapper for the function containing the other
   modules
 */
-// if(typeof exports != "undefined"){
   module.exports= {
     forecast:forecast,
     historical: historical,

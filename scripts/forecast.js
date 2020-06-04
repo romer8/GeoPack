@@ -33,7 +33,6 @@ module.exports= {
       type: 'GET',
       url: layer_URL,
       success: function(data) {
-        console.log(data);
         var response_timeSeries = data['time_series'];
         var dates_prep = response_timeSeries['datetime'];
         dates['dates']=dates_prep
@@ -263,8 +262,6 @@ module.exports= {
           type: 'GET',
           url: layer_URL2,
           success: function(resp) {
-            console.log("this is the resp");
-              console.log(resp);
               var dates2=[];
               var values2=[];
               for(var i = resp['time_series']['datetime'].length -1 ; i > resp['time_series']['datetime'].length - 56  ; --i ){
@@ -398,11 +395,8 @@ module.exports= {
               units_name = data['units']['name'];
               config = download.addConfigObject(dataToDownload,title_download);
               var maxValue = Math.max(...values['flow_max_m^3/s']);
-              console.log("max value");
-              console.log(maxValue);
               if(rp){
                 var layer_URL_rp=endpoint+"ReturnPeriods/?reach_id="+reachid+"&return_format=json";
-                // console.log("inside getreturnperiods");
                   $.ajax({
                     type:'GET',
                     assync: true,
