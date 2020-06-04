@@ -15,6 +15,7 @@
     "@babel/preset-env": "^7.9.6",
     "babel-jest": "^26.0.1",
     "babel-loader": "^8.1.0",
+    "canvas": "^2.6.1",
     "cross-env": "^7.0.2",
     "jest": "^26.0.1",
     "mocha": "^6.2.3",
@@ -24,7 +25,7 @@
   },
   "scripts": {
     "test": "jest",
-    "coverage":"npm test -- --coverage",
+    "coverage": "npm test -- --coverage",
     "build": "webpack --progress --mode=production",
     "watch": "webpack --progress --watch",
     "build:commonjs": "babel scripts --out-dir lib",
