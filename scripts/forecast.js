@@ -382,6 +382,8 @@ module.exports= {
               dataPlot.push(mean);
               dataPlot.push(highres);
               // Download//
+              dataToDownload['datetime_Forecast_Records']= dates2;
+              dataToDownload['Forecast_Records']= values2;
               dataToDownload['datetime']=dates.dates;
               dataToDownload['flow_25%_m^3/s']=values['flow_25%_m^3/s'];
               dataToDownload['flow_75%_m^3/s']=values['flow_75%_m^3/s'];
