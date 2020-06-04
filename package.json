@@ -6,21 +6,24 @@
   "dependencies": {
     "jquery": "^3.5.1",
     "mathjs": "^6.6.5",
-    "plotly.js-dist": "^1.54.1"
+    "plotly.js-dist": "^1.54.1",
+    "randomcolor": "^0.5.4"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
+    "babel-jest": "^26.0.1",
     "babel-loader": "^8.1.0",
     "cross-env": "^7.0.2",
+    "jest": "^26.0.1",
     "mocha": "^6.2.3",
     "rimraf": "^3.0.2",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha --reporter spec",
+    "test": "jest",
     "build": "webpack --progress --mode=production",
     "watch": "webpack --progress --watch",
     "build:commonjs": "babel scripts --out-dir lib",
