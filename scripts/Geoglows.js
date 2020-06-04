@@ -10,9 +10,9 @@ This is the wrapper for the four modules related to the API:
   Exporting the Necessary Modules
 */
 
-const forecast = require('./forecast.js');
-const historical=require('./historical.js');
-const seasonal = require('./seasonal.js')
+const FORECAST = require('./forecast.js');
+const HISTORICAL=require('./historical.js');
+const SEASONAL = require('./seasonal.js')
 
 // const seasonal=require('./scripts/getSeasonal.js');
 
@@ -21,7 +21,7 @@ const seasonal = require('./seasonal.js')
   modules
 */
   module.exports= {
-    forecast:forecast,
-    historical: historical,
-    seasonal:seasonal
+    forecast:FORECAST,
+    historical: HISTORICAL,
+    seasonal:SEASONAL
   }

@@ -14,7 +14,7 @@ var returnPeriods=require('./returnPeriods.js');
 
 //**GLOBAL VARIABLES TO DEAL WITH THE FUNCTIONS**//
 
-const ENPOINT=var endpoint="https://tethys2.byu.edu/localsptapi/api/";
+const ENPOINT="https://tethys2.byu.edu/localsptapi/api/";
 //** THIS FUNCTIONS RETRIEVES THE FORECAST DATA IN A GRAPH **//
 
 module.exports= {
