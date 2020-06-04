@@ -24,6 +24,7 @@
   },
   "scripts": {
     "test": "jest",
+    "coverage":"npm test -- --coverage",
     "build": "webpack --progress --mode=production",
     "watch": "webpack --progress --watch",
     "build:commonjs": "babel scripts --out-dir lib",
