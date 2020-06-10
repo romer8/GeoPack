@@ -14,10 +14,6 @@ This plots belong to a particular reach_id from a river, so plots are linked to 
    <li>Forecast Statistics with return periods</li>
    <li>Historical Records with return periods</li>
    <li>Seasonal Flow</li>
-<<<<<<< HEAD
- </ol>
-=======
 </ol>
 
 # Documentation-use
->>>>>>> 7885849c4f3eb3f977a75bfc207e3f125ce7a4d7
