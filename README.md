@@ -54,7 +54,7 @@ var foo = require("geoglows");
 foo.GEOGLOWS.forecast.graph_fr();
 </pre>
 
-## forecast
+## Forecast
 
 The FORECAST object contains the functions that are realted to the forcast of a reach_id of a given stream.
 
@@ -112,7 +112,7 @@ The retrieved plots are plotted using Plotly, so a button to download data has b
 -   `width` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Especifies the width of the plot.(optional).
 -   `height` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Especifies the height of the plot.(optional).
 
-## historical
+## Historical
 
 The HISTORICAL object contains the functions that are related to the Historical data of a reach_id of a given stream.
 
@@ -137,7 +137,7 @@ The retrieved plots are plotted using Plotly, so a button to download data has b
 -   `width` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Especifies the width of the plot.(optional).
 -   `height` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Especifies the height of the plot.(optional).
 
-## seasonal
+## Seasonal
 
 The SEASONAL object contains the functions that are related to the plots of the Seasonal average data of a reach_id of a given stream.
 
