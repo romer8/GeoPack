@@ -15,4 +15,5 @@ This plots belong to a particular reach_id from a river, so plots are linked to 
    <li>Historical Records with return periods</li>
    <li>Seasonal Flow</li>
 </ol>
-# Documentation
+
+# GEOgloWS-JavaScript-Package
