@@ -46,7 +46,6 @@ const SEASONAL = require('./seasonal.js')
  * var foo = require("geoglows");
  * foo.GEOGLOWS.forecast.graph_fr();
  *</pre>
-
  */
 
   module.exports= {
