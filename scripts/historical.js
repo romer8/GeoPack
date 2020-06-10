@@ -1,10 +1,4 @@
-/**
-Author: Elkin Giovanni Romero Bustamante
-
-This Module only exports a graph containing historical data,
-it can be added with more functions if neeeded, porobably something great
-will be to have the coordinates of lat long available to makeable to plot a graph.
-**/
+//Author: Elkin Giovanni Romero Bustamante
 
 //*** REQUIRE LIBRARIES***///
 var Plotly = require('plotly.js-dist');
@@ -20,8 +14,23 @@ var download=require('./DownloadAbility.js');
 var config = {};
 const ENDPOINT="https://tethys2.byu.edu/localsptapi/api/";
 
-//** THIS FUNCTIONS RETRIEVES THE HISTORICAL DATA IN A GRAPH **//
+  /**
+  * The HISTORICAL object contains the functions that are related to the Historical data of a reach_id of a given stream.
+  * @typedef {Object}
+  * @property {Function} graph - Retrieves a plot of the historical data of the given reach_id.
+ */
 module.exports= {
+  /**
+   * Retrieves the plot related to the Historical Records for a given reach_id of an stream.
+   * In addition, the function lets customize the width, heigh, and title of the graph if needed.
+   * The retrieved plots are plotted using Plotly, so a button to download data has been added to the plots
+   * @param {number} reachid - reach_id of an specific stream
+   * @param {string} htmlElement - It is the id of the HTML element.
+   * @param {string} title - it is the title of the grah (optional).
+   * @param {boolean} rp -Tells the function to add the return periods to the plot of the Forecast Records.(optional).
+   * @param {string} width - Especifies the width of the plot.(optional).
+   * @param {string} height - Especifies the height of the plot.(optional).
+   */
   graph: function(reachid,htmlElement,title,rp,width,height) {
     width = (typeof width !== 'undefined') ?  width : 600;
     height = (typeof heigth !== 'undefined') ?  heigth : 500;

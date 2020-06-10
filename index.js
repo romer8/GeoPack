@@ -23,9 +23,10 @@ This is the wrapper for the four modules related to the API:
 //     HISTORICAL: historical,
 //     SEASONAL: seasonal
 //   }
-
-
 var geoglows = require ('./scripts/Geoglows.js');
+
+
+
 module.exports = {
   GEOGLOWS: geoglows
 }

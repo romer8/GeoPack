@@ -1,7 +1,6 @@
-/**
-Author: Elkin Giovanni Romero Bustamante
-Function: This module only deals with the forecast data, and it should be good
-to add functions realted to find the forecast with lat and long as it goes**/
+//Author: Elkin Giovanni Romero Bustamante
+//Function: This module only deals with the forecast data, and it should be good
+//to add functions realted to find the forecast with lat and long as it goes
 
 //*** REQUIRE LIBRARIES***///
 var Plotly = require('plotly.js-dist');
@@ -14,10 +13,32 @@ var returnPeriods=require('./returnPeriods.js');
 
 //**GLOBAL VARIABLES TO DEAL WITH THE FUNCTIONS**//
 
+
 const ENPOINT="https://tethys2.byu.edu/localsptapi/api/";
 //** THIS FUNCTIONS RETRIEVES THE FORECAST DATA IN A GRAPH **//
 
+
+/**
+ * The FORECAST object contains the functions that are realted to the forcast of a reach_id of a given stream.
+  * @typedef {Object}
+  * @property {Function} graph_fr - Gives a Plot of the forecast Records for a given reach_id of an stream
+  * @property {Function} graph_emsembles - Gives a Plot of the forecast ensembles for a given reach_id of an stream. It gives 52 ensembles.
+  * @property {Function} graph_stats - Gives a Plot of the forecsast statistics and the last week of the forecast records.
+ */
+
 module.exports= {
+  /**
+   * Retrieves a plot of the forecast Records for a given reach_id of an stream. It gives 2 weeks of the forecst records.
+   * In addition, the function lets customize the width, heigh, and title of the graph if needed.
+   * The retrieved plots are plotted using Plotly, so a button to download data has been added to the plots
+
+   * @param {number} reachid - reach_id of an specific stream
+   * @param {string} htmlElement - It is the id of the HTML element.
+   * @param {string} title - it is the title of the grah (optional).
+   * @param {boolean} rp -Tells the function to add the return periods to the plot of the Forecast Records.(optional).
+   * @param {string} width - Especifies the width of the plot.(optional).
+   * @param {string} height - Especifies the height of the plot.(optional).
+   */
   graph_fr: function(reachid,htmlElement, title,rp, width,height){
   width = (typeof width !== 'undefined') ?  width : 500;
   height = (typeof heigth !== 'undefined') ?  heigth : 500;
@@ -99,11 +120,24 @@ module.exports= {
       },
     });
   },
+  /**
+   * Retrieves a plot of the forecast ensembles for a given reach_id of an stream. It gives 52 ensembles. The ensemble 52 is the only one that comes in high resolution.
+   * In addition, You can especify which ensembles do you want. For exmaple, the array [2,4,6,7] will give you the ensembles 2,4,6, and 7. The default is to give all
+   * all the ensembles. The function also lets customize the width, heigh, and title of the graph if needed.
+   * The retrieved plots are plotted using Plotly, so a button to download data has been added to the plots
+
+   * @param {number} reachid - reach_id of an specific stream
+   * @param {string} htmlElement - It is the id of the HTML element.
+   * @param {array} arrayEnsemble - It is the array that contains the number of ensembles that will be given (optional).
+   * @param {string} title - it is the title of the grah (optional).
+   * @param {string} width - Especifies the width of the plot.(optional).
+   * @param {string} height - Especifies the height of the plot.(optional).
+   */
   graph_emsembles: function(reachid,htmlElement,arrayEnsemble, title, width,height){
     width = (typeof width !== 'undefined') ?  width : 500;
     height = (typeof heigth !== 'undefined') ?  heigth : 500;
     title = (typeof title !== 'undefined') ?  title : 'Reach ID: ' + reachid;
-    arrayEnsemble = (typeof arrayEnsemble !== 'string') ? arrayEnsemble: Array.from(Array(52).keys()).map(function(value){return value +1});
+    arrayEnsemble = (typeof arrayEnsemble !== 'undefined') ? arrayEnsemble: Array.from(Array(52).keys()).map(function(value){return value +1});
     var dates = {highres: [], dates: []};
     var values = {emsembles:{}};
     var units;
@@ -236,6 +270,18 @@ module.exports= {
       },
     });
   },
+  /**
+   * Retrieves a plot of the forecast statisitics of the given reach_id. These statistcis are Maximun, Minimun, 25% percentile, 75% percentile, and Mean.
+   * The function also lets customize the width, heigh, and title of the graph if needed.
+   * The retrieved plots are plotted using Plotly, so a button to download data has been added to the plots
+
+   * @param {number} reachid - reach_id of an specific stream
+   * @param {string} htmlElement - It is the id of the HTML element.
+   * @param {string} title - it is the title of the grah (optional).
+   * @param {boolean} rp -Tells the function to add the return periods to the plot of the Forecast Records.(optional).
+   * @param {string} width - Especifies the width of the plot.(optional).
+   * @param {string} height - Especifies the height of the plot.(optional).
+   */
   graph_stats:function(reachid,htmlElement, title,rp,width,height){
     width = (typeof width !== 'undefined') ?  width : 500;
     height = (typeof heigth !== 'undefined') ?  heigth : 500;

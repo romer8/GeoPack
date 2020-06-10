@@ -1,7 +1,7 @@
-/**
-Author: Elkin Giovanni Romero Bustamante
-This Module helps with the return periods for the forecast, historical graphs,
-**/
+
+// Author: Elkin Giovanni Romero Bustamante
+// This Module helps with the return periods for the forecast, historical graphs,
+
 
 //*** REQUIRE LIBRARIES***///
 var Plotly = require('plotly.js-dist');
