@@ -25,26 +25,20 @@ This plots belong to a particular reach_id from a river, so plots are linked to 
 ### Table of Contents
 
 -   [Geoglows](#geoglows)
-    -   [forecast](#forecast)
-        -   [Properties](#properties)
-    -   [historical](#historical)
-        -   [Properties](#properties-1)
-    -   [seasonal](#seasonal)
-        -   [Properties](#properties-2)
--   [forecast](#forecast-1)
-    -   [Properties](#properties-3)
+-   [forecast](#forecast)
+    -   [Properties](#properties)
     -   [graph_fr](#graph_fr)
         -   [Parameters](#parameters)
     -   [graph_emsembles](#graph_emsembles)
         -   [Parameters](#parameters-1)
     -   [graph_stats](#graph_stats)
         -   [Parameters](#parameters-2)
--   [historical](#historical-1)
-    -   [Properties](#properties-4)
+-   [historical](#historical)
+    -   [Properties](#properties-1)
     -   [graph](#graph)
         -   [Parameters](#parameters-3)
--   [seasonal](#seasonal-1)
-    -   [Properties](#properties-5)
+-   [seasonal](#seasonal)
+    -   [Properties](#properties-2)
     -   [graph](#graph-1)
         -   [Parameters](#parameters-4)
 
@@ -79,34 +73,6 @@ If the NPM isntallation is going to be use then a simple require will work.
 var foo = require("geoglows");
 foo.GEOGLOWS.forecast.graph_fr();
 </pre>
-
-### forecast
-
-The FORECAST object contains the functions that are related to the plots of forecast of a reach_id of a given stream. Some of these functions:
-
-#### Properties
-
--   `graph_fr` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Gives a Plot of the forecast Records for a given reach_id of an stream
--   `graph_emsembles` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Gives a Plot of the forecast ensembles for a given reach_id of an stream. It gives 52 ensembles.
--   `graph_stats` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Gives a Plot of the forecsast statistics and the last week of the forecast records.
-
-### historical
-
-The HISTORICAL object contains the functions that are related to the plots of the Historical data of a reach_id of a given stream. The Historical object only
-contains one function: graph
-
-#### Properties
-
--   `graph` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Retrieves a plot of the historical data of the given reach_id.
-
-### seasonal
-
-The SEASONAL object contains the functions that are related to the plots of the Seasonal average of a reach_id of a given stream.
-the Seasonal object only contains one function: graph.
-
-#### Properties
-
--   `graph` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Retrieves a plot of the historical data of the given reach_id.
 
 ## forecast
 
