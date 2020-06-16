@@ -1,4 +1,4 @@
-# -JavaScript-Package
+# GEOGLoWS-JavaScript-Package
 
 \|
 <img alt="NPM" src="https://img.shields.io/npm/l/geoglows">
